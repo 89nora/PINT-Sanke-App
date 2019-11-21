@@ -11,6 +11,7 @@ git clone <path_from_github> //when you clone the project from master branch. Pr
 
 
 DETTE ER SEKVENSEN AF HVAD DU GØR ALLE GANGE EFTER DU HAR HENTET PROJEKTET FØRSTE GANG
+
 git pull //always do this first
 
 cd <folder> //Navigate to the folder 
