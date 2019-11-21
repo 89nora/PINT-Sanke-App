@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 
 export default class SettingsScreen extends Component {
-
     constructor(props) {
       super(props);
       this.state = {
@@ -24,9 +23,8 @@ export default class SettingsScreen extends Component {
               <Image source={require('./assets/Group3.png')} />
             </TouchableOpacity >
           </View> 
-          <Text style= {styles.paragraph}>SETTINGS</Text>
+          <Text style= {styles.paragraph}>SETTINGSsss</Text>
         </View>
-       
       )
     }
   }

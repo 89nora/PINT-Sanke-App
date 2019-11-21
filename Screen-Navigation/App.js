@@ -4,7 +4,6 @@ import { createAppContainer } from 'react-navigation';
 
 import { createStackNavigator, TransitionPresets, } from 'react-navigation-stack';
 
-
 import MapScreen from './MapScreen.js'; 
 import CameraScreen from './CameraScreen.js';
 import SettingsScreen from './SettingsScreen.js';
