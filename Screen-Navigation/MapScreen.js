@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 import { Image, View, Text, StyleSheet, Animated, ImageBackground, Easing, TouchableOpacity } from 'react-native';
 import loading from './Loading.js';
 import Map from './Map.js';
+import {_getLocationAsync} from './fetchingLocation';
+import {_watchPositionAsync} from './fetchingLocation';
 
 
 export default class MapScreen extends Component {
@@ -11,11 +16,85 @@ export default class MapScreen extends Component {
 
     this.state = {
       loaded: false,
+      location:null,
+      region: null, 
+      userMarker: null,
+
     };
     this.spinValue = new Animated.Value(0)
     loading.load(v => this.setState({ loaded: true }));
+
+  }
+//lav til async
+  //first componentWillMount is checking if using emulator, if not calls function _getLocationAsync
+  componentWillMount() {
+    console.log('running componentWillMount');
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      //this._getLocationAsync();
+      _getLocationAsync();
+    }
+
+ //_watchPositionAsync();
+    
+   
+    //Subscribe to location updates from the device. Put in options to manage how often to check for new position and when in m
+    this.watchId = Location.watchPositionAsync(
+      { timeInterval: 1000, distanceInterval: 1 },
+
+      //this is the callback-function from watchPositionAsync and gets called every time the location is updated.
+      //It is passed exactly one parameter: an object representing Location type (we call this object currentPosition). 
+      //Now this object can call its keys; coords, latitude etc.
+      (currentPosition) => {
+        console.log('currentPosition ' + currentPosition);
+        this.setState({
+          location: currentPosition,
+          region: {
+            latitude: currentPosition.coords.latitude,
+            longitude: currentPosition.coords.longitude,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
+          },
+          userMarker: {
+            latlng: {
+              latitude: currentPosition.coords.latitude,
+              longitude: currentPosition.coords.longitude,
+            }
+          },
+          error: null,
+        });
+      }
+    ); 
+    
   }
 
+  /*
+  // _getLocationAsync will check if device allows permission to use location of device
+  _getLocationAsync = async () => {
+    console.log('running getLocationAsync');
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      console.log('not granted!')
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+//getCurrentPositionAsync Returns a promise resolving to an object representing Location type.
+//this set the currentPosition when app first mounts
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({ 
+      location:location, 
+      region: {latitude: location.coords.latitude, longitude: location.coords.longitude,
+        latitudeDelta: 0.1, longitudeDelta: 0.1,},  
+        userMarker: {latitude: location.coords.latitude, longitude: location.coords.longitude}
+    });
+    console.log('location: ' + this.state.location.coords.latitude); 
+  };
+
+*/
 
   componentDidMount() {
     this.spin()
@@ -40,13 +119,19 @@ export default class MapScreen extends Component {
     const spin = this.spinValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '360deg']
-    })
-
-
+    }) 
+   
     return (
       this.state.loaded ?
-        <View style={styles.container}>
-             <Map />
+        <View style={styles.container}>  
+             <Map mapRegion= {this.state.region} userMarker = {this.state.userMarker.latlng} />
+             
+             {this.props.navigation.getParam('switchValue', 'default value') ?
+             <Text style= {styles.paragraph}>Geofencing is activated</Text>
+             :
+             <Text style= {styles.paragraph}>Geofencing is NOT activated</Text>
+
+             }
           <View style={styles.buttonContainer}>
             <TouchableOpacity style= {styles.TouchableOpacityButton} onPress={() => this.props.navigation.navigate('Map')}>
               <Image source={require('./assets/Group1.png')} />
@@ -58,7 +143,7 @@ export default class MapScreen extends Component {
               <Image source={require('./assets/Group3.png')} />
             </TouchableOpacity >
           </View> 
-          <Text style= {styles.paragraph}>MAP</Text>
+         
         </View>
 
         :
@@ -88,8 +173,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column-reverse',
     alignItems: 'center',
-    //paddingTop: Constants.statusBarHeight,
-    //backgroundColor: '#ecf0f1',
   },
   buttonContainer: {
     position: 'absolute',
@@ -106,9 +189,10 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   paragraph: {
+    position: 'absolute',
     marginBottom: '35%',
-    color: 'black',
-    fontSize: 68,
+    color: '#FFCA00',
+    fontSize: 20,
     textAlign: 'center'
   },
   backgroundImage: {

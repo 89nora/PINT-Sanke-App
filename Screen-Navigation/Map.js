@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
 
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 
 export default class Map extends Component {
@@ -12,7 +12,8 @@ export default class Map extends Component {
 
     render() {
         return (
-            <MapView style={styles.mapStyle}  >
+            <MapView style={styles.mapStyle} region = {this.props.mapRegion}  >
+                <Marker coordinate= {this.props.userMarker}/>
             </MapView>
         );
     }
