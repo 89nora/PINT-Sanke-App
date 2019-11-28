@@ -13,6 +13,8 @@ export default class Map extends Component {
     render() {
         return (
             <MapView style={styles.mapStyle} region = {this.props.mapRegion}  >
+                
+                
                 <Marker coordinate= {this.props.userMarker}/>
             </MapView>
         );

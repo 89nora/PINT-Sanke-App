@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import { Image, View, Text, StyleSheet, Animated, ImageBackground, Easing, TouchableOpacity } from 'react-native';
+import { Image, View, Text, StyleSheet, Animated, ImageBackground, Easing, TouchableOpacity, Platform } from 'react-native';
 import loading from './Loading.js';
 import Map from './Map.js';
 import {_getLocationAsync} from './fetchingLocation';
