@@ -20,12 +20,6 @@ const propTypes = {
   image: PropTypes.any.isRequired,
   // Top left and bottom right coordinates for the overlay
   bounds: PropTypes.arrayOf(PropTypes.array.isRequired).isRequired,
-  /* Boolean to allow an overlay to be tappable and use the
-   * onPress function
-   */
-  tappable: PropTypes.bool,
-  // Callback that is called when the user presses on the overlay
-  onPress: PropTypes.func,
 };
 
 class MapOverlay extends Component {

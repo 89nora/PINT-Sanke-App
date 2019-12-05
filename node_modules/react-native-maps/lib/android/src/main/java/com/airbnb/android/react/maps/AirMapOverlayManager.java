@@ -61,10 +61,6 @@ public class AirMapOverlayManager extends ViewGroupManager<AirMapOverlay> {
     view.setImage(source);
   }
 
-  @ReactProp(name = "tappable", defaultBoolean = false)
-  public void setTappable(AirMapOverlay view, boolean tapabble) {
-    view.setTappable(tapabble);
-  }
 
   @Override
   @Nullable
