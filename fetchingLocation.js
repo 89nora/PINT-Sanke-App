@@ -5,8 +5,9 @@ import { Image, View, Text, StyleSheet, Animated, ImageBackground, Easing, Touch
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
-//class
-export const _getLocationAsync = async () => {
+class fetchingLocation extends Component {
+
+  _getLocationAsync = async () => {
     console.log('running getLocationAsync');
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
@@ -28,7 +29,7 @@ export const _getLocationAsync = async () => {
 };
 
 
-export const _watchPositionAsync = async () => {
+ _watchPositionAsync = async () => {
     console.log('running watchPositionAsync');
         //Subscribe to location updates from the device. Put in options to manage how often to check for new position and when in m
        this.watchId = Location.watchPositionAsync(
@@ -53,9 +54,11 @@ export const _watchPositionAsync = async () => {
                     longitude: currentPosition.coords.longitude,
                   }
                 },
+                loaded: true,
                 error: null,
               });
              console.log('Kørt gennem state');
             }
           );
 };
+}

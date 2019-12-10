@@ -1,42 +1,70 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Slider } from 'react-native';
-import SwitchExample from './Switch.js';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Slider, Switch } from 'react-native';
+import {AsyncStorage} from 'react-native';
 
 export default class SettingsScreen extends Component {
   constructor(props) {
-    super(props);
+    super(props); 
     this.state = {
-      switchValue: true,
       sliderValue: 50,
+      switchValue: false, 
     }; 
+
+    console.log('RUNNING CONSTRUCTOR SETTINGS'); 
   }
 
-  //receives a value that is either true or false from toggleSwitch props in render?
-  toggleSwitch = (value) => {
-    this.setState({ switchValue: value })
-    console.log('Switch is: ' + value)
+  componentWillMount() { 
+   // this.state.switchValue = false; 
+    console.log('SettingWillMount_switchValue: ' + this.state.switchValue); 
   }
+
+  //receives a value that is either true or false from toggleSwitch props in render
+  toggleSwitch = (value) => {
+
+    try {
+      AsyncStorage.setItem('switchValue', JSON.stringify(value)); 
+      console.log('runs saveSwitchValue');
+    } catch (error) {
+      // Error retrieving data 
+      console.log(error.message);
+    }
+
+    console.log('switchValue11:' + value);    
+    this.setState({ switchValue: value }); 
+    //this console.log beneath is logging the opposite switchValue: WHY?
+    console.log('switchValue1:' + this.state.switchValue);
+
+   // this.saveSwitchValue();
+  }
+
+  /*
+  saveSwitchValue = async () => {
+    try {
+      await AsyncStorage.setItem('switchValue', JSON.stringify(this.state.switchValue));
+      console.log('runs saveSwitchValue');
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message);
+    }
+  };
+  */
 
   sliderChange = (sliderValue) => {
     this.setState({ sliderValue: parseFloat(sliderValue) })
   }
 
- 
+
+
   render() {
-    console.log('switch start: ' + this.state.switchValue);
+ 
     return (
       <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Map', {switchValue: this.state.switchValue}) }>
-            <Image source={require('./assets/Group1.png')} />
-          </TouchableOpacity >
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Camera')}>
-            <Image source={require('./assets/Group2.png')} />
-          </TouchableOpacity >
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Settings')}>
-            <Image source={require('./assets/Group3.png')} />
-          </TouchableOpacity >
-        </View>
+
+        {this.state.switchValue ?
+        <Text> switch is TRUE</Text>
+        :
+        <Text> switch is FALSE</Text>
+        }
 
         {this.state.switchValue ?
           <View style={styles.toggleContainer}>
@@ -44,9 +72,9 @@ export default class SettingsScreen extends Component {
             <Text style={{ color: 'black', fontSize: 16, }}>Geofencing is now turned on!</Text>
             <Slider
               style={styles.slider}
-              step='1'
-              maximumValue='40'
-              minimumValue='0'
+              step={1}
+              maximumValue={40}
+              minimumValue={0}
               onValueChange={this.sliderChange}
               value={this.state.sliderValue}
               disabled={false}
@@ -59,9 +87,10 @@ export default class SettingsScreen extends Component {
           </View>
         }
         <View style={styles.toggleContainer}>
-
-          <SwitchExample toggleSwitch={this.toggleSwitch}
-            switchValue={this.state.switchValue} />
+        <Switch
+          value = {this.state.switchValue}
+          onValueChange = {this.toggleSwitch}
+          />
         </View>
         <Text style={styles.paragraph}>SETTINGS</Text>
       </View>
@@ -83,6 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonContainer: {
+    position: 'absolute',
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: '10%',
     flexDirection: 'row',

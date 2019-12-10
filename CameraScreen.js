@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet,TouchableOpacity, Image } from 'react-native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
-
 
 export default class CameraScreen extends Component {
     constructor(props) {
@@ -15,18 +13,7 @@ export default class CameraScreen extends Component {
     render() {
       return (
         <View style={styles.container}>
-          <View style={styles.buttonContainer}>
-            <TouchableHighlight color = 'red' onPress={() => this.props.navigation.navigate('Map')}>
-              <Image  source={require('./assets/Group1.png')} />
-            </TouchableHighlight >
-            <TouchableOpacity style={styles.TouchableOpacityButton} onPress={() => this.props.navigation.navigate('Camera')}>
-              <Image source={require('./assets/Group2.png')} />
-            </TouchableOpacity >
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Settings')}>
-              <Image source={require('./assets/Group3.png')} />
-            </TouchableOpacity >
-          </View> 
-          <Text style= {styles.paragraph}>CAMERA</Text>
+
         </View>
       );
     }
@@ -35,24 +22,31 @@ export default class CameraScreen extends Component {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      flexDirection: 'column-reverse', 
+      flexDirection: 'column-reverse',
       alignItems: 'center',
+      backgroundColor: '#FFCA00',
+    },
+    toggleContainer: {
+      flex: 1,
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     buttonContainer: {
+      position: 'absolute',
       backgroundColor: 'rgba(0,0,0,0.5)',
       padding: '10%',
       flexDirection: 'row',
       justifyContent: 'space-around',
       width: '100%',
     },
-    TouchableOpacityButton:{
-
-    },
     paragraph: {
       color: 'black',
       fontSize: 68,
       textAlign: 'center'
     },
+    slider: {
+      width: '50%',
+    }
   
   })
-  
