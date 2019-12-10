@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { View, Switch, StyleSheet }
-
-    from 'react-native'
+import { View, Switch, StyleSheet } from 'react-native'
 
 export default SwitchExample = (props) => {
+    
     return (
         <Switch
             style={styles.switch}

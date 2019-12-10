@@ -2,11 +2,16 @@ import React, { Component } from 'react';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import { Image, View, Text, StyleSheet, Animated, ImageBackground, Easing, TouchableOpacity } from 'react-native';
+import { Image, View, Text, StyleSheet, Animated, ImageBackground, Easing, Slider, Button, Switch, Platform } from 'react-native';
 import loading from './Loading.js';
 import Map from './Map.js';
-import {_getLocationAsync} from './fetchingLocation';
-import {_watchPositionAsync} from './fetchingLocation';
+import { _getLocationAsync } from './fetchingLocation';
+import { _watchPositionAsync } from './fetchingLocation';
+import fetchingLocation from './fetchingLocation.js';
+import NavigationBar from './NavigationBar.js';
+import { AsyncStorage } from 'react-native';
+
+
 
 
 export default class MapScreen extends Component {
@@ -16,31 +21,31 @@ export default class MapScreen extends Component {
 
     this.state = {
       loaded: false,
-      location:null,
-      region: null, 
-      userMarker: null,
-
+      location: null,
+      region: null,
+      userMarker: false,
+      switchValue: false,
+      sliderValue: 30,
     };
+    console.log('constructor_boolValue: ' + this.state.switchValue);
     this.spinValue = new Animated.Value(0)
-    loading.load(v => this.setState({ loaded: true }));
+    //loading.load(v => this.setState({ loaded: true }));
 
   }
-//lav til async
+
+
+ 
   //first componentWillMount is checking if using emulator, if not calls function _getLocationAsync
   componentWillMount() {
-    console.log('running componentWillMount');
+
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
       });
     } else {
-      //this._getLocationAsync();
-      _getLocationAsync();
+      this._getLocationAsync();
     }
 
- //_watchPositionAsync();
-    
-   
     //Subscribe to location updates from the device. Put in options to manage how often to check for new position and when in m
     this.watchId = Location.watchPositionAsync(
       { timeInterval: 1000, distanceInterval: 1 },
@@ -67,11 +72,40 @@ export default class MapScreen extends Component {
           error: null,
         });
       }
-    ); 
-    
+    );
+  }
+
+  toggleSwitch = (value) => {
+    console.log('switchValue:' + value);
+    this.setState({ switchValue: value });
+  }
+
+  sliderChange = (sliderValue) => {
+    this.setState({ sliderValue: parseFloat(sliderValue) })
   }
 
   /*
+
+//retrieving data from mapScreen here: 
+_retrieveData = async () => {
+ 
+    console.log('component is mounted');  
+  console.log('retrieving switchValue from settingsScreen'); 
+  try {
+    var switchValue = await AsyncStorage.getItem('switchValue');
+    console.log('switchValue2: ' + switchValue);
+    this.state.bool_switchValue = JSON.parse(switchValue);
+    if (this.state.bool_switchValue !== null) {
+      // We have data!!
+      console.log('RETRIEVED VALUE: ' + this.state.bool_switchValue);
+    }
+  } catch (error) {
+    // Error retrieving data
+    console.log('We dont have any data from settingsScreen');
+  }
+};
+*/
+
   // _getLocationAsync will check if device allows permission to use location of device
   _getLocationAsync = async () => {
     console.log('running getLocationAsync');
@@ -82,23 +116,33 @@ export default class MapScreen extends Component {
         errorMessage: 'Permission to access location was denied',
       });
     }
-//getCurrentPositionAsync Returns a promise resolving to an object representing Location type.
-//this set the currentPosition when app first mounts
+    //getCurrentPositionAsync Returns a promise resolving to an object representing Location type.
+    //this set the currentPosition when app first mounts
     let location = await Location.getCurrentPositionAsync({});
-    this.setState({ 
-      location:location, 
-      region: {latitude: location.coords.latitude, longitude: location.coords.longitude,
-        latitudeDelta: 0.1, longitudeDelta: 0.1,},  
-        userMarker: {latitude: location.coords.latitude, longitude: location.coords.longitude}
+    this.setState({
+      location: location,
+      region: {
+        latitude: location.coords.latitude, longitude: location.coords.longitude,
+        latitudeDelta: 0.1, longitudeDelta: 0.1,
+      },
+      loaded: true,
+
     });
-    console.log('location: ' + this.state.location.coords.latitude); 
+    console.log('location: ' + this.state.location.coords.latitude);
   };
 
-*/
+  /*
+  componentDidUpdate() {
+  
+    console.log('UPDATING');
+    this._retrieveData();
+  }
+  */
 
   componentDidMount() {
     this.spin()
   }
+
 
   spin() {
     this.spinValue.setValue(0)
@@ -116,34 +160,56 @@ export default class MapScreen extends Component {
 
   render() {
 
+
     const spin = this.spinValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '360deg']
-    }) 
-   
-    return (
-      this.state.loaded ?
-        <View style={styles.container}>  
-             <Map mapRegion= {this.state.region} userMarker = {this.state.userMarker.latlng} />
-             
-             {this.props.navigation.getParam('switchValue', 'default value') ?
-             <Text style= {styles.paragraph}>Geofencing is activated</Text>
-             :
-             <Text style= {styles.paragraph}>Geofencing is NOT activated</Text>
+    })
 
-             }
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style= {styles.TouchableOpacityButton} onPress={() => this.props.navigation.navigate('Map')}>
-              <Image source={require('./assets/Group1.png')} />
-            </TouchableOpacity >
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Camera')}>
-              <Image source={require('./assets/Group2.png')} />
-            </TouchableOpacity >
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Settings')}>
-              <Image source={require('./assets/Group3.png')} />
-            </TouchableOpacity >
-          </View> 
-         
+    return (
+      //this.startRender ?
+      this.state.loaded ?
+        <View style={styles.container}>
+
+          <Map mapRegion={this.state.region} userMarker={this.state.userMarker.latlng} />
+
+
+          {this.state.switchValue ?
+            <View style={styles.geoContainer}>
+              <View style={styles.geoMenu}>
+
+                <Text>GEOFENCE</Text>
+                <Switch
+                  value={this.state.switchValue}
+                  onValueChange={this.toggleSwitch}
+                />
+                <Slider
+                  style={styles.slider}
+                  step={1}
+                  maximumValue={40}
+                  minimumValue={0}
+                  onValueChange={this.sliderChange}
+                  value={this.state.sliderValue}
+                  disabled={false}
+                />
+                <Text>Du har valgt en geofence-radius på: {this.state.sliderValue}</Text>
+              </View>
+            </View>
+
+            :
+            <View style={styles.geoContainer}>
+              <View style={styles.geoMenu}>
+
+                <Text>GEOFENCE</Text>
+                <Switch
+                  value={this.state.switchValue}
+                  onValueChange={this.toggleSwitch}
+                />
+              </View>
+
+            </View>
+
+          }
         </View>
 
         :
@@ -153,8 +219,8 @@ export default class MapScreen extends Component {
           <Animated.Image
             style={{
               marginTop: '25%',
-              width: 260,
-              height: 233,
+              width: '78%',
+              height: '50%',
               transform: [{ rotate: spin }]
             }}
             source={require('./assets/flowers.png')}
@@ -171,16 +237,28 @@ export default class MapScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column-reverse',
-    alignItems: 'center',
+    flexDirection: 'column',
   },
-  buttonContainer: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    padding: '10%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+  geoContainer: {
     width: '100%',
+    position: 'absolute',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    paddingTop: '10%',
+    paddingRight: '15%', 
+  },
+  geoMenu: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '2%',
+  },
+  slider: {
+    width: '50%',
+  },
+  paragraph: {
+    color: 'green',
+    fontSize: 20,
+    textAlign: 'center'
   },
   loadText: {
     marginBottom: '10%',
@@ -188,13 +266,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: 'center'
   },
-  paragraph: {
-    position: 'absolute',
-    marginBottom: '35%',
-    color: '#FFCA00',
-    fontSize: 20,
-    textAlign: 'center'
-  },
+
   backgroundImage: {
     flex: 1,
     flexDirection: 'column',
