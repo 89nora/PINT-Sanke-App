@@ -4,15 +4,10 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import { Image, View, Text, StyleSheet, Animated, ImageBackground, Easing, Slider, Button, Switch, Platform } from 'react-native';
 import loading from './Loading.js';
-import Map from './Map.js';
-import { _getLocationAsync } from './fetchingLocation';
-import { _watchPositionAsync } from './fetchingLocation';
-import fetchingLocation from './fetchingLocation.js';
-import NavigationBar from './NavigationBar.js';
-import { AsyncStorage } from 'react-native';
+import GeoFenceComponent from './GeoFenceComponent.js';
 
 
-
+import { orderDistanceArray } from './PointsOfInterest.js';
 
 export default class MapScreen extends Component {
 
@@ -20,12 +15,14 @@ export default class MapScreen extends Component {
     super(props);
 
     this.state = {
-      loaded: false,
+      loaded: true,
       location: null,
       region: null,
-      userMarker: false,
+      marker: null,
       switchValue: false,
       sliderValue: 30,
+      Zone : false,
+      ZoneText : 'non-sense'
     };
     console.log('constructor_boolValue: ' + this.state.switchValue);
     this.spinValue = new Animated.Value(0)
@@ -33,47 +30,56 @@ export default class MapScreen extends Component {
 
   }
 
+ componentWillMount() {
+    this._getLocationAsync();
+  }
 
- 
-  //first componentWillMount is checking if using emulator, if not calls function _getLocationAsync
-  componentWillMount() {
+  async componentDidMount()   
+  {
+    this.spin()
 
-    if (Platform.OS === 'android' && !Constants.isDevice) {
-      this.setState({
-        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      });
-    } else {
-      this._getLocationAsync();
-    }
-
-    //Subscribe to location updates from the device. Put in options to manage how often to check for new position and when in m
+    await this.AskPermission(); // Check that we have permission to access location data - ask if we don't 
     this.watchId = Location.watchPositionAsync(
-      { timeInterval: 1000, distanceInterval: 1 },
-
-      //this is the callback-function from watchPositionAsync and gets called every time the location is updated.
-      //It is passed exactly one parameter: an object representing Location type (we call this object currentPosition). 
-      //Now this object can call its keys; coords, latitude etc.
+      {accuray:Location.Accuracy.BestForNavigation , timeInterval:1000, distanceInterval:1,  mayShowUserSettingsDialog:true},
+      // This is the callback function specifying  all the stuff that we want to happen whenver we have a new location
       (currentPosition) => {
-        console.log('currentPosition ' + currentPosition);
+        orderDistanceArray({latitude: currentPosition.coords.latitude, longitude:currentPosition.coords.longitude});
+        
         this.setState({
-          location: currentPosition,
+          location:currentPosition,
           region: {
             latitude: currentPosition.coords.latitude,
             longitude: currentPosition.coords.longitude,
-            latitudeDelta: 0.1,
-            longitudeDelta: 0.1,
+            latitudeDelta: 0.075, 
+            longitudeDelta: 0.075, 
           },
-          userMarker: {
-            latlng: {
-              latitude: currentPosition.coords.latitude,
-              longitude: currentPosition.coords.longitude,
-            }
+          marker: {
+                  latlng :currentPosition.coords
           },
+
           error: null,
         });
+         // Just in case we want to log while debugging
+        //console.group(pointsOfInterest);
       }
     );
   }
+
+  componentWillUnmount() 
+  {
+    this.watchId.remove(); // stop watching for location changes
+  }
+
+ AskPermission  = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    console.log('Asking for geo permission: ' + status);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+  };
+
 
   toggleSwitch = (value) => {
     console.log('switchValue:' + value);
@@ -84,64 +90,37 @@ export default class MapScreen extends Component {
     this.setState({ sliderValue: parseFloat(sliderValue) })
   }
 
-  /*
+  inTheZone = (z,p)=>
+  {
+     this.setState({
+       Zone : z, 
+       ZoneText:p.whatis});
+  };
 
-//retrieving data from mapScreen here: 
-_retrieveData = async () => {
- 
-    console.log('component is mounted');  
-  console.log('retrieving switchValue from settingsScreen'); 
-  try {
-    var switchValue = await AsyncStorage.getItem('switchValue');
-    console.log('switchValue2: ' + switchValue);
-    this.state.bool_switchValue = JSON.parse(switchValue);
-    if (this.state.bool_switchValue !== null) {
-      // We have data!!
-      console.log('RETRIEVED VALUE: ' + this.state.bool_switchValue);
-    }
-  } catch (error) {
-    // Error retrieving data
-    console.log('We dont have any data from settingsScreen');
-  }
-};
-*/
 
   // _getLocationAsync will check if device allows permission to use location of device
   _getLocationAsync = async () => {
-    console.log('running getLocationAsync');
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      console.log('not granted!')
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
+    await this.AskPermission(); // Check that we have permission to access location data - ask if we don't 
+
     //getCurrentPositionAsync Returns a promise resolving to an object representing Location type.
     //this set the currentPosition when app first mounts
     let location = await Location.getCurrentPositionAsync({});
+    console.log('location: ' + location);
+
     this.setState({
       location: location,
       region: {
         latitude: location.coords.latitude, longitude: location.coords.longitude,
         latitudeDelta: 0.1, longitudeDelta: 0.1,
       },
+      marker: {
+        latlng: location.coords
+      },
       loaded: true,
 
     });
-    console.log('location: ' + this.state.location.coords.latitude);
+    console.log('this was executed! ');
   };
-
-  /*
-  componentDidUpdate() {
-  
-    console.log('UPDATING');
-    this._retrieveData();
-  }
-  */
-
-  componentDidMount() {
-    this.spin()
-  }
 
 
   spin() {
@@ -156,23 +135,29 @@ _retrieveData = async () => {
     ).start(() => this.spin())
   }
 
-
-
   render() {
-
-
     const spin = this.spinValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '360deg']
     })
 
+    console.log("Marker is: " + this.state.marker)
+
     return (
-      //this.startRender ?
+      //ERRORMESSAGE IS NEW
       this.state.loaded ?
         <View style={styles.container}>
+          {this.state.marker !== null ? (
+        <GeoFenceComponent 
+        showCoordinates={false} 
+        inZone={this.inTheZone} 
+        mapRegion={this.state.region}
+        userMarker={this.state.marker.latlng}
+        >    
+      
+        </GeoFenceComponent>
 
-          <Map mapRegion={this.state.region} userMarker={this.state.userMarker.latlng} />
-
+          ) : console.log("Error")}
 
           {this.state.switchValue ?
             <View style={styles.geoContainer}>
@@ -245,7 +230,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     alignItems: 'center',
     paddingTop: '10%',
-    paddingRight: '15%', 
+    paddingRight: '15%',
   },
   geoMenu: {
     flexDirection: 'column',
