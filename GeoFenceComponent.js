@@ -20,7 +20,7 @@ export default class GeoFenceComponent extends Component {
     };
   };
   
-
+ 
  componentDidMount()   
   {
 
@@ -41,6 +41,7 @@ export default class GeoFenceComponent extends Component {
   {
     this.watchId.remove(); // stop watching for location changes
   }
+  
   getImgFromName(name) {
     // If-statements kan også bruges i stedet for switch-case (e.g.: if (name === 'Rosenborg slot') return RosenborgImg;)
     switch (name) {
@@ -60,7 +61,9 @@ export default class GeoFenceComponent extends Component {
 
     return (
          <MapView style={styles.mapStyle} region = {this.props.mapRegion} >
-         <Marker coordinate= {this.props.userMarker}/>
+        <Marker coordinate={this.props.userMarker}>
+          <Image source={require('./assets/userMarker.png')} style={{ width: 50, height: 50 }} />
+        </Marker>
 
             {pointsOfInterest.map((p,index) => (  // Create new temporary array with each of the the points of interest turned into individual
             //Markers in the new array. The new temporary array of Markers is hereafter displayed  as Markers on the map
