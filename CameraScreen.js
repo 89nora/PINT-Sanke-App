@@ -10,7 +10,7 @@ export default class App extends Component {
     super(props);
     this.state = {
       hasCameraPermissions: false,
-      hasCameraRollPermissions: false,
+      hasCameraRollPermissions: false, 
       ratio: '16:9',
     };
   }
@@ -58,7 +58,7 @@ export default class App extends Component {
   }
 
   onPictureSaved = async photo => {
-    console.log("Test");
+
     this.setState({
       showPicture: true,
       pictureUri: photo.uri,
@@ -73,7 +73,7 @@ export default class App extends Component {
         {this.state.hasCameraPermissions ? (
           <View style={styles.cameraContainer}>
             {this.state.showPicture ? (
-              <Image source={{ uri: this.state.pictureUri }} style={styles.camera}/>
+              <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
             ) : (
                 <Camera
                   ref={ref => {
