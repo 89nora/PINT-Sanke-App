@@ -147,41 +147,37 @@ export default class MapScreen extends Component {
 
     return (
       //ERRORMESSAGE IS NEW
-      this.state.loaded ?
+      this.state.loaded ? // ternary if - loading screen
         <View style={styles.container}>
 
-          {this.state.marker !== null ? (
-            
-        <GeoFenceComponent  
-        showCoordinates={false} 
-        inZone={this.inTheZone} 
-        mapRegion={this.state.region}
-        userMarker={this.state.marker.latlng}
-        switchValue={this.state.switchValue}
-        >    
-
-        </GeoFenceComponent>
-
-          ) : console.log("Error")}
+          {this.state.marker !== null ?
+          (
+            <GeoFenceComponent  
+            showCoordinates={false} 
+            inZone={this.inTheZone} 
+            mapRegion={this.state.region}
+            userMarker={this.state.marker.latlng}
+            switchValue={this.state.switchValue}
+            >    
+            </GeoFenceComponent>
+          ) : (console.log("Error")) }
 
           <View style={styles.buttonContainer}>
-         <Button 
-            title= {'show me point ' + this.state.ZoneText}
-          
-            onPress={() => this.props.navigation.navigate('InterestPoint', {what:this.state.ZoneText}
-            )}          
-            />
-         </View>
+            <Button 
+              title= {'show me point ' + this.state.ZoneText}
+              onPress={() => this.props.navigation.navigate('InterestPoint', {what:this.state.ZoneText})}          
+              />
+          </View>
 
-          {this.state.switchValue ?
-            <View style={styles.geoContainer}>
-              <View style={styles.geoMenu}>
+          <View style={styles.geoContainer}>
 
-                <Text>GEOFENCE</Text>
-                <Switch
-                  value={this.state.switchValue}
-                  onValueChange={this.toggleSwitch}
-                />
+              <Text>GEOFENCE</Text>
+              <Switch
+                value={this.state.switchValue}
+                onValueChange={this.toggleSwitch}
+              />
+              
+              {this.state.switchValue ? ( // ternary if - switch on/off
                 <Slider
                   style={styles.slider}
                   step={1}
@@ -191,28 +187,16 @@ export default class MapScreen extends Component {
                   value={this.state.sliderValue}
                   disabled={false}
                 />
-                <Text>Du har valgt en geofence-radius på: {this.state.sliderValue}</Text>
-              </View>
-            </View>
+              // ternary else - switch on/off
+              ) : (null) }
+              {this.state.switchValue ? (
+                <Text>Geofence-radius: {this.state.sliderValue}km</Text>
+              ) : (null) }
+          </View>
 
-            :
-            <View style={styles.geoContainer}>
-              <View style={styles.geoMenu}>
-
-                <Text>GEOFENCE</Text>
-                <Switch
-                  value={this.state.switchValue}
-                  onValueChange={this.toggleSwitch}
-                />
-              </View>
-
-            </View>
-
-          }
-        
         </View>
 
-        :
+        : // ternary else - loading screen
 
         <ImageBackground style={styles.backgroundImage} source={require('./assets/foodism1.jpg')}  >
 
@@ -234,25 +218,18 @@ export default class MapScreen extends Component {
   }
 }
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
   },
   geoContainer: {
-    width: '100%',
+    flex: 1,
     position: 'absolute',
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    paddingTop: '10%',
-    paddingRight: '15%',
-  },
-  geoMenu: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '2%',
+    width: "100%",
+    alignItems: "flex-end",
+    marginTop: '10%',
+    paddingEnd: "2%",
   },
   buttonContainer: {
     width: '100%',
