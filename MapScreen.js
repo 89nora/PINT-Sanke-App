@@ -157,6 +157,7 @@ export default class MapScreen extends Component {
         inZone={this.inTheZone} 
         mapRegion={this.state.region}
         userMarker={this.state.marker.latlng}
+        switchValue={this.state.switchValue}
         >    
 
         </GeoFenceComponent>

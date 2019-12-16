@@ -14,13 +14,14 @@ constructor(coords, radius, whatis)
 this.coords= coords; // Latitude and Longitude
 this.radius = radius; // Radius in circle of interest
 this.whatis = whatis; // Short txt to describe
+// ***make something to hold an image on markers this.image = image;
 this.currentDistance = 99999;  // Just put me as far as way as I can to begin with ...
 
 };
 }
 
 //then you can add new point of interest with this function
-function addPointOfInterest(lati,longi,radius, whatis) // Making it easier to add new pointOfInterest to pointsOfInterest
+export function addPointOfInterest(lati,longi,radius, whatis) // Making it easier to add new pointOfInterest to pointsOfInterest
 {
 pointsOfInterest.push(new pointOfInterest({latitude:lati,longitude:longi},radius,whatis)) 
 

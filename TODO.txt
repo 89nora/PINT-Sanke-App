@@ -1,0 +1,4 @@
+fix geofence on/off
+fix geofence slider radius 
+Camera save to camera roll
+
