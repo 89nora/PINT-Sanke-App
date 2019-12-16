@@ -61,11 +61,26 @@ export default class GeoFenceComponent extends Component {
   }
   //addMarker function gets coordinates passed from onPress  event in render. 
   //Spread operator to keep the list as it is, and add new stuff. This.state.newMarkers what objects it consist of.
-  addMarker = (latitude, longitude) => { 
-    addPointOfInterest(latitude, longitude, 2000, 'lol');
+  addMarker = (latitude, longitude ) => { 
+     addPointOfInterest(latitude, longitude, this.props.sliderValue*100, 'lol')
+     console.log(pointsOfInterest)
+    // sætter state for at opdatere, så der ikke kommer delay når markers addes
+     this.setState({})
         }
-    
-  
+
+ /**   addMarker2 = (latitude, longitude) =>{
+      this.setState({
+        pointsOfInterest: [this.state.pointsOfInterest,
+          { latitude, 
+            longitude,
+            radius: 2000,
+            whatis: 'Kirsebær'}
+        ]
+       
+      })
+    console.log("added to array", pointsOfInterest)
+    }       
+  **/
   render() {
     // tje
    
@@ -73,7 +88,8 @@ export default class GeoFenceComponent extends Component {
     
     return (
       console.log("geofence value " + this.props.switchValue),
-      <MapView style={styles.mapStyle} region={this.props.mapRegion} onPress={(e) => {
+      // initialRegion sørger for at mapped ikke hele tiden zoomer tilbage til start positionen når det opdateres
+      <MapView style={styles.mapStyle} initialRegion={this.props.mapRegion} onPress={(e) => {
          console.log(e.nativeEvent.coordinate)
         this.addMarker(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude) }}>
            
@@ -90,7 +106,7 @@ export default class GeoFenceComponent extends Component {
             coordinate={p.coords}
             title={p.whatis}
             >
-            <Image source={(this.props.switchValue == true && index == 0 && p.currentDistance < p.radius) ? (require('./assets/greenApple.png')): (require('./assets/apple1.png'))} />
+            <Image source={(this.props.switchValue == true  && p.currentDistance < p.radius) ? (require('./assets/greenApple.png')): (require('./assets/apple1.png'))} />
             </Marker>
                          
           ))} 

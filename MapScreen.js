@@ -150,14 +150,17 @@ export default class MapScreen extends Component {
       this.state.loaded ? // ternary if - loading screen
         <View style={styles.container}>
 
+
           {this.state.marker !== null ?
           (
-            <GeoFenceComponent  
+            <GeoFenceComponent
+            // sender values så de er available som props i geofencecomponet.js
             showCoordinates={false} 
             inZone={this.inTheZone} 
             mapRegion={this.state.region}
             userMarker={this.state.marker.latlng}
             switchValue={this.state.switchValue}
+            sliderValue={this.state.sliderValue}
             >    
             </GeoFenceComponent>
           ) : (console.log("Error")) }
