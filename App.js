@@ -6,7 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { Image, StyleSheet, View, Text } from 'react-native';
 import MapScreen from './screens/MapScreen.js';
 import CameraScreen from './screens/CameraScreen.js';
-import InterestScreen from './InterestScreen.js';
+import InterestScreen from './screens/InterestScreen.js';
 
 //TAB NAVIGATOR - THIS SCRIPT NOW BELONGS TO REACT-NAVIGATION-TABS
 
