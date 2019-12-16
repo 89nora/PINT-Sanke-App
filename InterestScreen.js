@@ -3,7 +3,7 @@ import { Button, Image, View, StyleSheet, ScrollView, TouchableOpacity, Text, Di
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-
+import { AsyncStorage } from 'react-native';
 export default class ImagePickerExample extends React.Component {
   state = {
     image: null,
@@ -43,6 +43,27 @@ export default class ImagePickerExample extends React.Component {
     );
   }
 */
+
+  componentWillMount() {
+    this.getImageId();
+  }
+
+  getImageId = async () => {
+    let imageId;
+
+    try {
+      imageId = await AsyncStorage.getItem('imageId') || 'none';
+
+      //imageId = await AsyncStorage.getItem('imageId') || 'none'; 
+      console.log('image received from async: ' + imageId);
+      this.setState({ images: this.state.images.concat(imageId) });
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message);
+    }
+    console.log('this all the images: ' + this.state.images);
+    return imageId;
+  }
   componentDidMount() {
     this.getPermissionAsync();
     console.log('hi');
@@ -72,8 +93,25 @@ export default class ImagePickerExample extends React.Component {
         this.setState({images: this.state.images.concat(result.uri)});
 
       //this.setState({ image: result.uri });
+      this.saveImageId(result.uri);
+      //this.setState({ image: result.uri });
     }
   };
+
+  saveImageId = async imageId => {
+    console.log('this is the image id: ' + imageId);
+    try {
+      await AsyncStorage.setItem('imageId', imageId);
+      console.log('all saved images: ' + this.state.images);
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message);
+      //this.setState({ image: result.uri });
+    }
+
+  };
+
+
 
   showImages = () => {
     let temp_image = [];

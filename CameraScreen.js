@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, Button, CameraRoll, Pl
 import Constants from 'expo-constants';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
+//import * as ImagePicker from 'expo-image-picker';
 
 export default class App extends Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class App extends Component {
       hasCameraRollPermissions: false,
       ratio: '16:9',
       photo: '',
-      image: null,
+      //image: null, 
     };
   }
 
@@ -23,13 +23,14 @@ export default class App extends Component {
     this.setState({
       hasCameraPermissions: status === 'granted',
       hasCameraRollPermissions: status === 'granted',
-      showPicture: false,
-      pictureUri: '',
-      //photo: '',
+      //pictureUri: '',
+      photo: '',
     });
   }
 
-  _pickImage = async () => {
+ /** 
+  * skal fjernes
+  * _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -43,7 +44,7 @@ export default class App extends Component {
       this.setState({ image: result.uri });
     }
   }
-
+**/
   collectPictureSizes = async () => {
     ratios = await this.getRatios();
     console.log(ratios);
@@ -63,8 +64,8 @@ export default class App extends Component {
 
   onPictureSaved = async photo => {
     this.setState({
-      showPicture: true,
-     pictureUri: photo,
+ 
+     //pictureUri: photo,
      // image: photo,
     });
 
@@ -83,7 +84,7 @@ export default class App extends Component {
     } else*/ {
       console.log("PhotoURI: " + photo);
       CameraRoll.saveToCameraRoll(photo, 'photo')
-        .then(Alert.alert('Success', 'Photo added to iPhone camera roll!'))
+        .then(Alert.alert('Success', 'Photo added to camera roll!'))
     }
   }
 /* 
@@ -118,7 +119,7 @@ export default class App extends Component {
               }}
               style={styles.camera}
               type={Camera.Constants.Type.back}
-            //ratio={this.state.ratio}
+            ratio={this.state.ratio}
             //onCameraReady={this.collectPictureSizes}
             >
             </Camera>
