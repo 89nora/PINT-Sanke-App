@@ -118,7 +118,7 @@ export default class App extends Component {
               }}
               style={styles.camera}
               type={Camera.Constants.Type.back}
-              ratio={this.state.ratio}
+            //ratio={this.state.ratio}
             //onCameraReady={this.collectPictureSizes}
             >
             </Camera>
