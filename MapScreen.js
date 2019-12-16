@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import { Image, View, Text, StyleSheet, Animated, ImageBackground, Easing, Slider, Button, Switch, Platform } from 'react-native';
+import { Image, View, Text, StyleSheet, Animated, ImageBackground, TouchableOpacity, Easing, Slider, Button, Switch, Platform } from 'react-native';
 import loading from './Loading.js';
 import GeoFenceComponent from './GeoFenceComponent.js';
 
 
 import { orderDistanceArray } from './PointsOfInterest.js';
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class MapScreen extends Component {
 
@@ -135,6 +136,7 @@ export default class MapScreen extends Component {
     ).start(() => this.spin())
   }
 
+
   render() {
     const spin = this.spinValue.interpolate({
       inputRange: [0, 1],
@@ -147,18 +149,29 @@ export default class MapScreen extends Component {
       //ERRORMESSAGE IS NEW
       this.state.loaded ?
         <View style={styles.container}>
+
           {this.state.marker !== null ? (
-        <GeoFenceComponent 
+            
+        <GeoFenceComponent  
         showCoordinates={false} 
         inZone={this.inTheZone} 
         mapRegion={this.state.region}
         userMarker={this.state.marker.latlng}
         switchValue={this.state.switchValue}
         >    
-      
+
         </GeoFenceComponent>
 
           ) : console.log("Error")}
+
+          <View style={styles.buttonContainer}>
+         <Button 
+            title= {'show me point ' + this.state.ZoneText}
+          
+            onPress={() => this.props.navigation.navigate('InterestPoint', {what:this.state.ZoneText}
+            )}          
+            />
+         </View>
 
           {this.state.switchValue ?
             <View style={styles.geoContainer}>
@@ -196,6 +209,7 @@ export default class MapScreen extends Component {
             </View>
 
           }
+        
         </View>
 
         :
@@ -220,6 +234,8 @@ export default class MapScreen extends Component {
   }
 }
 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -238,8 +254,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: '2%',
   },
+  buttonContainer: {
+    width: '100%',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    position: 'absolute',
+    marginTop: '50%',
+  },
   slider: {
     width: '50%',
+  },
+  button: {
+    //position: 'absolute',
   },
   paragraph: {
     color: 'green',
