@@ -63,6 +63,7 @@ export default class ImagePickerExample extends React.Component {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1
+      //last update version
     });
 
     console.log(result);
