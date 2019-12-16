@@ -52,7 +52,7 @@ Rosenborg:  55.685970,12.577291
 Regensen: 55.681133,12.575229
 Børsen: 55.676038,12.584014
 */
-addPointOfInterest(55.685970,12.577291,20000,  'Æbletræ');
+addPointOfInterest(55.685970,12.577291,2000,  'Æbletræ');
 addPointOfInterest(55.681547,12.575751201,2000, 'Krydderurter');
 addPointOfInterest(55.676038,12.584014,2000,'Svampe');
 addPointOfInterest(55.673409, 12.579428,2000,'Jordbær');
