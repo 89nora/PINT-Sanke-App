@@ -1,4 +1,13 @@
-fix geofence on/off
-fix geofence slider radius 
-Camera save to camera roll
+fix geofence on/off *TJEK
+Camera save to camera roll *TJEK
+
+
+
+gem billeder til tilhørende markers, evt. differencier med whatis. skal nok gemmes med AsyncStorage
+rydde op i koden så den ser presentabel ud og har comments der forklarer
+sørg for at addmarker opdatere state onPress **KEVIN
+generel styling så den ser mere fresh ud! **MATHIAS
+Publish appen
+
+fix geofence slider radius ** hvis der er tid
 
