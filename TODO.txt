@@ -1,13 +1,20 @@
-fix geofence on/off *TJEK
-Camera save to camera roll *TJEK
+GOALS FOR 17-12-2019:
 
+- mulighed for at tilføje flere billeder til interest screen
+- fixe camera på android
+- sørge for at hver marker kan have sine egne billeder tilknyttet
 
+NICE TO HAVE:
 
-gem billeder til tilhørende markers, evt. differencier med whatis. skal nok gemmes med AsyncStorage
-rydde op i koden så den ser presentabel ud og har comments der forklarer
-sørg for at addmarker opdatere state onPress **KEVIN
-generel styling så den ser mere fresh ud! **MATHIAS
-Publish appen
+- gem billeder til tilhørende markers, evt. differencier med whatis. skal nok gemmes med AsyncStorage
+- rydde op i koden så den ser presentabel ud og har comments der forklarer
+- generel styling så den ser mere fresh ud! **MATHIAS
+- Publish appen
+- fix geofence slider radius ** hvis der er tid
 
-fix geofence slider radius ** hvis der er tid
+TING VI FIK FIXED!:
+
+- fix geofence on/off *TJEK
+- Camera save to camera roll *TJEK
+- sørg for at addmarker opdatere state onPress **KEVIN ** Semi TJEK
 
