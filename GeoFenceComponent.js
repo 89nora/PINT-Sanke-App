@@ -6,10 +6,11 @@ import { Text, StyleSheet, Dimensions, View, Image,  } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
 
-import {initalizePointsOfInterest, pointsOfInterest} from './PointsOfInterest.js';
+import { initalizePointsOfInterest, pointsOfInterest, addPointOfInterest} from './PointsOfInterest.js';
 
 import Apple from './assets/apple1.png';
 import AppleGreen from './assets/greenApple.png';
+
 export default class GeoFenceComponent extends Component {
   constructor(props) {
   
@@ -58,7 +59,13 @@ export default class GeoFenceComponent extends Component {
         return Apple;
     }
   }
-
+  //addMarker function gets coordinates passed from onPress  event in render. 
+  //Spread operator to keep the list as it is, and add new stuff. This.state.newMarkers what objects it consist of.
+  addMarker = (latitude, longitude) => { 
+    addPointOfInterest(latitude, longitude, 2000, 'lol');
+        }
+    
+  
   render() {
     // tje
    
@@ -66,7 +73,9 @@ export default class GeoFenceComponent extends Component {
     
     return (
       console.log("geofence value " + this.props.switchValue),
-         <MapView style={styles.mapStyle} region = {this.props.mapRegion} >
+      <MapView style={styles.mapStyle} region={this.props.mapRegion} onPress={(e) => {
+         console.log(e.nativeEvent.coordinate)
+        this.addMarker(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude) }}>
            
         <Marker coordinate={this.props.userMarker}>
           
