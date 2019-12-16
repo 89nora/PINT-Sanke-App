@@ -89,7 +89,7 @@ export default class GeoFenceComponent extends Component {
     return (
       console.log("geofence value " + this.props.switchValue),
       // initialRegion sørger for at mapped ikke hele tiden zoomer tilbage til start positionen når det opdateres
-      <MapView style={styles.mapStyle} initialRegion={this.props.mapRegion} onPress={(e) => {
+      <MapView style={styles.mapStyle} initialRegion={this.props.mapRegion} onLongPress={(e) => {
          console.log(e.nativeEvent.coordinate)
         this.addMarker(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude) }}>
            
