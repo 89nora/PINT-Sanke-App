@@ -49,6 +49,8 @@ export default class ImagePickerExample extends React.Component {
   }
 
   getImageId = async () => {
+    var currentZoneText = this.props.navigation.state.params.what;
+    console.log('currentZoneText: ' + currentZoneText);
     let imageId;
 
     try {
