@@ -5,6 +5,7 @@ import * as Permissions from 'expo-permissions';
 import { Image, View, Text, StyleSheet, Animated, ImageBackground, TouchableOpacity, Easing, Slider, Button, Switch, Platform } from 'react-native';
 import Loading from '../utils/Loading.js';
 import GeoFenceComponent from '../components/GeoFenceComponent.js';
+import SearchInput from '../components/SearchInput.js';
 
 
 import { orderDistanceArray } from '../utils/PointsOfInterest.js';
@@ -23,7 +24,8 @@ export default class MapScreen extends Component {
       switchValue: false,
       sliderValue: 30,
       Zone : false,
-      ZoneText : 'non-sense'
+      ZoneText : 'non-sense',
+      showSearchInput: true,
     };
     console.log('constructor_boolValue: ' + this.state.switchValue);
     this.spinValue = new Animated.Value(0)
@@ -165,6 +167,18 @@ export default class MapScreen extends Component {
             </GeoFenceComponent>
           ) : (console.log("Error")) }
 
+
+          {this.state.showSearchInput ? 
+          <View style={styles.searchContainer}>
+          <SearchInput
+            placeholder="Search any city"
+            //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation
+            onSubmit={this.handleUpdateLocation}
+          />
+           </View>
+           :
+          null
+        }
           <View style={styles.buttonContainer}>
             <Button 
               title= {'show me point ' + this.state.ZoneText}
@@ -240,6 +254,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     marginTop: '50%',
+  },
+  searchContainer: {
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    padding: '20%',
+    width: '100%',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    position: 'absolute',
+    marginTop: '80%',
   },
   slider: {
     width: '50%',
