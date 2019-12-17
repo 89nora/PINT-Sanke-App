@@ -62,7 +62,7 @@ export default class GeoFenceComponent extends Component {
   //addMarker function gets coordinates passed from onPress  event in render. 
   //Spread operator to keep the list as it is, and add new stuff. This.state.newMarkers what objects it consist of.
   addMarker = (latitude, longitude ) => { 
-     addPointOfInterest(latitude, longitude, this.props.sliderValue*100, 'lol')
+     addPointOfInterest(latitude, longitude, this.props.sliderValue*100, this.props.searchInput)
      console.log(pointsOfInterest)
     // sætter state for at opdatere, så der ikke kommer delay når markers addes
      this.setState({})
@@ -81,6 +81,11 @@ export default class GeoFenceComponent extends Component {
     console.log("added to array", pointsOfInterest)
     }       
   **/
+
+ someFn = (onPressInfo) => {
+  this.props.callbackFromParent(onPressInfo);
+}
+
   render() {
     // tje
    
@@ -105,6 +110,8 @@ export default class GeoFenceComponent extends Component {
             key={index}
             coordinate={p.coords}
             title={p.whatis}
+            onPress = {() => {this.someFn(true)}}
+            //onPress = {() => {this.someFn(p.whatis)}}
             >
             <Image source={(this.props.switchValue == true  && p.currentDistance < p.radius) ? (require('../assets/greenApple.png')): (require('../assets/apple1.png'))} />
             </Marker>

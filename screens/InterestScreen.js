@@ -101,7 +101,6 @@ export default class ImagePickerExample extends React.Component {
   };
 
   saveImageId = async imageId => {
-    console.log('this is the image id: ' + imageId);
     try {
       await AsyncStorage.setItem('imageId', imageId);
       console.log('all saved images: ' + this.state.images);
@@ -110,6 +109,8 @@ export default class ImagePickerExample extends React.Component {
       console.log(error.message);
       //this.setState({ image: result.uri });
     }
+    console.log('this is the image id: ' + imageId);
+
 
   };
 
