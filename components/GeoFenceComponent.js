@@ -6,10 +6,10 @@ import { Text, StyleSheet, Dimensions, View, Image,  } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
 
-import { initalizePointsOfInterest, pointsOfInterest, addPointOfInterest} from './PointsOfInterest.js';
+import { initalizePointsOfInterest, pointsOfInterest, addPointOfInterest} from '../utils/PointsOfInterest.js';
 
-import Apple from './assets/apple1.png';
-import AppleGreen from './assets/greenApple.png';
+import Apple from '../assets/apple1.png';
+import AppleGreen from '../assets/greenApple.png';
 
 export default class GeoFenceComponent extends Component {
   constructor(props) {
@@ -95,7 +95,7 @@ export default class GeoFenceComponent extends Component {
            
         <Marker coordinate={this.props.userMarker}>
           
-          <Image source={require('./assets/userMarker.png')} style={{ width: 50, height: 50 }} />
+          <Image source={require('../assets/userMarker.png')} style={{ width: 50, height: 50 }} />
         </Marker>
   
         {pointsOfInterest.map((p, index) => (  
@@ -106,7 +106,7 @@ export default class GeoFenceComponent extends Component {
             coordinate={p.coords}
             title={p.whatis}
             >
-            <Image source={(this.props.switchValue == true  && p.currentDistance < p.radius) ? (require('./assets/greenApple.png')): (require('./assets/apple1.png'))} />
+            <Image source={(this.props.switchValue == true  && p.currentDistance < p.radius) ? (require('../assets/greenApple.png')): (require('../assets/apple1.png'))} />
             </Marker>
                          
           ))} 

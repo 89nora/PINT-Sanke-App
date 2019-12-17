@@ -3,11 +3,11 @@ import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import { Image, View, Text, StyleSheet, Animated, ImageBackground, TouchableOpacity, Easing, Slider, Button, Switch, Platform } from 'react-native';
-import loading from './Loading.js';
-import GeoFenceComponent from './GeoFenceComponent.js';
+import loading from '../Loading.js';
+import GeoFenceComponent from '../components/GeoFenceComponent.js';
 
 
-import { orderDistanceArray } from './PointsOfInterest.js';
+import { orderDistanceArray } from '../utils/PointsOfInterest.js';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class MapScreen extends Component {
@@ -201,7 +201,7 @@ export default class MapScreen extends Component {
 
         : // ternary else - loading screen
 
-        <ImageBackground style={styles.backgroundImage} source={require('./assets/foodism1.jpg')}  >
+        <ImageBackground style={styles.backgroundImage} source={require('../assets/foodism1.jpg')}  >
 
           <Animated.Image
             style={{
@@ -210,7 +210,7 @@ export default class MapScreen extends Component {
               height: '50%',
               transform: [{ rotate: spin }]
             }}
-            source={require('./assets/flowers.png')}
+            source={require('../assets/flowers.png')}
           />
 
           <Text style={styles.loadText}> Loading...  </Text>
