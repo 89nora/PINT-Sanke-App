@@ -25,7 +25,8 @@ export default class MapScreen extends Component {
       sliderValue: 30,
       Zone : false,
       ZoneText : 'non-sense',
-      showSearchInput: true,
+      showSearchInput: false,
+      SearchInput: '',
     };
     console.log('constructor_boolValue: ' + this.state.switchValue);
     this.spinValue = new Animated.Value(0)
@@ -138,6 +139,21 @@ export default class MapScreen extends Component {
     ).start(() => this.spin())
   }
 
+  myCallback = (dataFromGeofence) => {
+    console.log('DATA from geofence: ' + dataFromGeofence);
+    this.setState({
+      showSearchInput: dataFromGeofence,
+    })
+   }
+
+   handleUpdateInput = (textInput) => {
+    console.log('DET er tekstinputtet: ' + textInput);
+    this.setState({
+      showSearchInput: false,
+      ZoneText: textInput,
+      SearchInput: textInput,
+    })
+   }
 
   render() {
     const spin = this.spinValue.interpolate({
@@ -153,7 +169,7 @@ export default class MapScreen extends Component {
         <View style={styles.container}>
 
 
-          {this.state.marker !== null ?
+          {this.state.marker !== null ? 
           (
             <GeoFenceComponent
             // sender values så de er available som props i geofencecomponet.js
@@ -163,6 +179,8 @@ export default class MapScreen extends Component {
             userMarker={this.state.marker.latlng}
             switchValue={this.state.switchValue}
             sliderValue={this.state.sliderValue}
+            callbackFromParent={this.myCallback}
+            searchInput= {this.state.SearchInput}
             >    
             </GeoFenceComponent>
           ) : (console.log("Error")) }
@@ -173,7 +191,7 @@ export default class MapScreen extends Component {
           <SearchInput
             placeholder="Search any city"
             //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation
-            onSubmit={this.handleUpdateLocation}
+            onSubmit={this.handleUpdateInput}
           />
            </View>
            :
