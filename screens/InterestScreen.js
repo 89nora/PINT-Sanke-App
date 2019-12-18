@@ -10,40 +10,6 @@ export default class ImagePickerExample extends React.Component {
     images: [],
   };
 
-  render(){
-    const { params } = this.props.navigation.state;
-
-      return(
-        <View style={styles.container}>
-        <Button
-          title="Pick an image from camera roll"
-          onPress={this._pickImage}
-        />
-        <ScrollView style={styles.scrollView} >
-      {this.showImages()}
-      </ScrollView>
-      <Text style={styles.header}>{'Welcome to the secret spot of ' + params.what  }</Text>
-      </View>
-      );
-  }
-
-/*
-  render() {
-    let { image } = this.state;
-
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
-          title="Pick an image from camera roll"
-          onPress={this._pickImage}
-        />
-        {image &&
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      </View>
-    );
-  }
-*/
-
   componentWillMount() {
     this.getImageId();
   }
@@ -68,7 +34,6 @@ export default class ImagePickerExample extends React.Component {
   }
   componentDidMount() {
     this.getPermissionAsync();
-    console.log('hi');
   }
 
   getPermissionAsync = async () => {
@@ -86,7 +51,6 @@ export default class ImagePickerExample extends React.Component {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1
-      //last update version
     });
 
     console.log(result);
@@ -110,11 +74,7 @@ export default class ImagePickerExample extends React.Component {
       //this.setState({ image: result.uri });
     }
     console.log('this is the image id: ' + imageId);
-
-
   };
-
-
 
   showImages = () => {
     let temp_image = [];
@@ -139,138 +99,76 @@ export default class ImagePickerExample extends React.Component {
 
     return temp_image;
   };
-}
 
-/*
-import React, { Component } from 'react';
-import { Text, StyleSheet, Image, View,Button, CameraRoll, ScrollView  } from 'react-native';
+  render(){
+    const { params } = this.props.navigation.state;
 
-//import AuthorRow from './AuthorRow.js';
+      return(
+        <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={this._pickImage}
+          >
+          <Text style={styles.btnText}>
+            camera roll
+          </Text>
+        </TouchableOpacity>
 
-export default class InterestScreen extends Component {
-
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            photos: [],
-        }
-    }
-    _handleButtonPress = () => {
-        CameraRoll.getPhotos({
-            first: 1,
-            assetType: 'Photos',
-          })
-          .then(r => {
-            this.setState({ photos: r.edges });
-          })
-          .catch((err) => {
-             //Error Loading Images
-          });
-
-        };
-
-        componentDidMount() {
-            console.log('this is the current loaded image :' + this.state.photos[0]);
-
-        }
-
-     render() {
-      return (
-        <View style= {styles.container}>
-          <Button style= {styles.button} title="Load Images" onPress={this._handleButtonPress} />
-          <ScrollView>
-            {this.state.photos.map((p, i) => { 
-            return (
-              <Image
-                key={i}
-                style={styles.image}
-                source={{ uri: p.node.image.uri }}
-              />
-            );
-          })}
-          </ScrollView>
-        </View>
+        <ScrollView style={styles.scrollView} >
+        </ScrollView>
+        
+        {this.showImages()}
+      <Text style={styles.header}>{ params.what }</Text>
+      </View>
       );
-     }
-     */
-
-/*
-render() {
-    return(
-<View style={styles.container}>
-    <Text>IINSIDE INTEREST POINT</Text>
-    <Image style={styles.image} source= {require('./assets/flowers.png')} />
-</View>
-
-    );
+  }
 }
-*/
-//}
 
-
-/**
- * lol
- *          <View key={index + 1}>
-            <TouchableOpacity
-              key={index + 2}
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignSelf: 'center',
-                width: '100%'
-              }}
-              onPress={() => {
-                this.removeImage(index);
-                this.forceUpdate();
-              }}
-            >
-              <Text
-                key={index + 3}
-                style={{
-                  alignSelf: 'center',
-                  color: '#CE3C3E',
-                  fontWeight: 'bold'
-                }}
-              >
-                Delete
-              </Text>
-            </TouchableOpacity>
-          </View>
- */
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column-reverse', 
-      },
-      scrollView: {
-      },
-      header:{
-        paddingTop: '7%',
-        fontWeight: 'bold',
-        fontSize: 20,
-      },
-      imageView: {
-        width: null,
-        height: null,
-        borderColor: '#dddddd',
-    
-      },
-    image: {
-        marginTop: '2%',
-        //flex: 1,
-        flexDirection: 'row',
-        //backgroundColor: 'silver',
-        padding: 5,
-        borderRadius: 5,
-        //height: null,
-        //width: null,
-        margin: 3,
-        //resizeMode: 'cover',
-        aspectRatio: 1, //render it to match is width (fullscreen)
-    },
-    button: {
-        marginTop: '10%',
-padding: '10%',
-    }
+  container: {
+    flex: 1,
+    flexDirection: 'column-reverse',
+  },
+  scrollView: {
+  
+  },
+  header:{
+    padding: '5%',
+    fontSize: 36,
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'rgb(255, 202, 0)',
+    textShadowColor: 'rgba(0, 0, 0, 0.7)',
+    textShadowOffset: { width: 1, height: 4 },
+    textShadowRadius: 5,
+  },
+  imageView: {
+    width: null,
+    height: null,
+    borderColor: '#dddddd',
+  },
+  image: {
+    marginTop: '2%',
+    flexDirection: 'row',
+    padding: 5,
+    borderRadius: 5,
+    margin: 3,
+    aspectRatio: 1, //render it to match is width (fullscreen)
+  },
+  button: {
+    alignSelf: "center",
+    marginBottom: 10,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#404040',
+    backgroundColor: '#485155',
+    borderRadius: 25,
+    opacity: .75,
+  },
+  btnText: {
+    color: 'white',
+    opacity: 1,
+    textTransform: 'uppercase',
+  },
 })

@@ -6,10 +6,7 @@ import { Image, View, Text, StyleSheet, Animated, ImageBackground, TouchableOpac
 import Loading from '../utils/Loading.js';
 import GeoFenceComponent from '../components/GeoFenceComponent.js';
 import SearchInput from '../components/SearchInput.js';
-import { addPointOfInterest} from '../utils/PointsOfInterest.js';
-
-
-
+import { addPointOfInterest, pointsOfInterest} from '../utils/PointsOfInterest.js';
 import { orderDistanceArray } from '../utils/PointsOfInterest.js';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -26,7 +23,7 @@ export default class MapScreen extends Component {
       switchValue: false,
       sliderValue: 30,
       Zone : false,
-      ZoneText : 'non-sense',
+      ZoneText : '',
       showSearchInput: false,
       SearchInput: '',
       onPressLatitude: null, 
@@ -102,9 +99,9 @@ export default class MapScreen extends Component {
   {
      this.setState({
        Zone : z, 
-       ZoneText:p.whatis});
+       ZoneText:p.whatis
+      });
   };
-
 
   // _getLocationAsync will check if device allows permission to use location of device
   _getLocationAsync = async () => {
@@ -164,14 +161,10 @@ export default class MapScreen extends Component {
       SearchInput: textInput,
     })
    }
-
    
-   handleUpdateInput = (textInput) => {
-    console.log('DET er tekstinputtet: ' + textInput);
+   handleUpdateInput = () => {
     this.setState({
       showSearchInput: false,
-      ZoneText: textInput,
-      //SearchInput: textInput,
     })
     this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100,this.state.SearchInput );
    }
@@ -189,78 +182,87 @@ export default class MapScreen extends Component {
       outputRange: ['0deg', '360deg']
     })
 
-    console.log("Marker is: " + this.state.marker)
+    console.log("MapScreen > Marker: " + JSON.stringify(this.state.marker));
 
     return (
       //ERRORMESSAGE IS NEW
       this.state.loaded ? // ternary if - loading screen
         <View style={styles.container}>
 
-
-          {this.state.marker !== null ? 
+          {this.state.marker !== null ? // ternary if - marker is set
           (
             <GeoFenceComponent
-            // sender values så de er available som props i geofencecomponet.js
-            showCoordinates={false} 
-            inZone={this.inTheZone} 
-            mapRegion={this.state.region}
-            userMarker={this.state.marker.latlng}
-            switchValue={this.state.switchValue}
-            sliderValue={this.state.sliderValue}
-            callbackFromParent={this.myCallback}
-            callbackFromParent2={this.myCallback2}
-            //searchInput= {this.state.SearchInput}
-            //newMarkerCoords= {this.state.onPressLatitude, this.state.onPressLongitude}
-            >    
+              // sender values så de er available som props i geofencecomponet.js
+              showCoordinates={false} 
+              inZone={this.inTheZone} 
+              mapRegion={this.state.region}
+              userMarker={this.state.marker.latlng}
+              switchValue={this.state.switchValue}
+              sliderValue={this.state.sliderValue}
+              callbackFromParent={this.myCallback}
+              callbackFromParent2={this.myCallback2}
+              //searchInput= {this.state.SearchInput}
+              //newMarkerCoords= {this.state.onPressLatitude, this.state.onPressLongitude}
+              >    
             </GeoFenceComponent>
-          ) : (console.log("Error")) }
+            ) 
+          : // ternary else - marker is set
+            (console.log("Error"))
+          }
 
-
-          {this.state.showSearchInput ? 
+          {this.state.showSearchInput ? // ternary if - search input
          
-          <SearchInput
-            placeholder="Write name here..."
-            callbackOnChangeText={this.handleChangeInputCallback}
-            //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation
-            onSubmit={this.handleUpdateInput}
-          />
-          
-           :
-          null
-        }
-          <View style={styles.buttonContainer}>
-            <Button 
-              title= {'show me point ' + this.state.ZoneText}
-              onPress={() => this.props.navigation.navigate('InterestPoint', {what:this.state.ZoneText})}          
-              />
-          </View>
+            <SearchInput
+              placeholder="Write name here..."
+              callbackOnChangeText={this.handleChangeInputCallback}
+              //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation
+              onSubmit={this.handleUpdateInput}
+            />
+           : // ternary else - search input
+            null
+          }
 
           <View style={styles.geoContainer}>
-
-              <Text>GEOFENCE</Text>
-              <Switch
-                value={this.state.switchValue}
-                onValueChange={this.toggleSwitch}
-              />
+            <Text>GEOFENCE</Text>
+            <Switch
+              value={this.state.switchValue}
+              onValueChange={this.toggleSwitch}
+            />
               
-              {this.state.switchValue ? ( // ternary if - switch on/off
-                <Slider
-                  style={styles.slider}
-                  step={1}
-                  maximumValue={40}
-                  minimumValue={0}
-                  onValueChange={this.sliderChange}
-                  value={this.state.sliderValue}
-                  disabled={false}
-                />
-              // ternary else - switch on/off
-              ) : (null) }
-              {this.state.switchValue ? (
-                <Text>Geofence-radius: {this.state.sliderValue}km</Text>
-              ) : (null) }
+            {this.state.switchValue ? ( // ternary if - switch on/off
+              <Slider
+                style={styles.slider}
+                step={1}
+                maximumValue={40}
+                minimumValue={0}
+                onValueChange={this.sliderChange}
+                value={this.state.sliderValue}
+                disabled={false}
+              />
+                )
+              : // ternary else - switch on/off
+                (null)
+              }
+              {this.state.switchValue ? ( // ternary if - switch value
+                <Text> Geofence-radius: {this.state.sliderValue}km </Text>
+                )
+              :// ternary else - switch value
+                (null)
+              }
           </View>
 
-        </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.props.navigation.navigate('InterestPoint', {what:pointsOfInterest[0].whatis})}
+              >
+              <Text style={styles.btnText}>
+              { pointsOfInterest[0].whatis ? pointsOfInterest[0].whatis : 'closest spot' }
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+        </View> //Container - End
 
         : // ternary else - loading screen
 
@@ -271,7 +273,7 @@ export default class MapScreen extends Component {
               marginTop: '25%',
               width: '78%',
               height: '50%',
-              transform: [{ rotate: spin }]
+              transform: [{ rotate: spin }],
             }}
             source={require('../assets/flowers.png')}
           />
@@ -279,7 +281,6 @@ export default class MapScreen extends Component {
           <Text style={styles.loadText}> Loading...  </Text>
 
         </ImageBackground>
-
     )
   }
 }
@@ -287,28 +288,40 @@ export default class MapScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row-reverse',
   },
   geoContainer: {
-    flex: 1,
     position: 'absolute',
     width: "100%",
-    alignItems: "flex-end",
+    alignSelf: 'flex-start',
+    alignItems: 'flex-end',
     marginTop: '10%',
-    paddingEnd: "2%",
+    padding: '2%',
   },
   buttonContainer: {
-    width: '100%',
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
+    flexDirection: 'row',
     position: 'absolute',
-    marginTop: '50%',
+    width: '100%',
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+  },
+  button: {
+    alignSelf: "center",
+    marginBottom: 10,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#404040',
+    backgroundColor: '#485155',
+    borderRadius: 25,
+    opacity: .75,
+  },
+  btnText: {
+    color: 'white',
+    opacity: 1,
+    textTransform: 'uppercase',
   },
   slider: {
     width: '50%',
-  },
-  button: {
-    //position: 'absolute',
   },
   paragraph: {
     color: 'green',
@@ -321,7 +334,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: 'center'
   },
-
   backgroundImage: {
     flex: 1,
     flexDirection: 'column',
