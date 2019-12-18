@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Platform, TextInput } from 'react-native';
 import PropTypes from 'prop-types';
-
+import { getRhumbLineBearing } from 'geolib';
 
 export default class SearchInput extends React.Component {
 
@@ -9,9 +9,6 @@ export default class SearchInput extends React.Component {
   state = {
     text: '',
   };
-
-
-
 
   //only stores the data inside text prop
   handleChangeTextCallBack = (text) => {
@@ -31,7 +28,6 @@ export default class SearchInput extends React.Component {
     this.setState({ text: '' });
   };
 
-
   //TextInput has several props, props can be objects, properties or functions.
   //Bind makes sure the handleChangeText method is binded to the TextInput component.
   render() {
@@ -40,18 +36,20 @@ export default class SearchInput extends React.Component {
 
     return (
       <View style={styles.container}>
-        <TextInput
-          autoCorrect={false}
-          value={text}
-          placeholder={this.props.placeholder} 
-          placeholderTextColor="white"
-          style={styles.textInput}
-          onChangeText={this.handleChangeTextCallBack}
-          onSubmitEditing={this.handleSubmitEditing}
-          clearButtomMode="always"
-        />
-        <Text style={styles.header}>Give your secret spot a name</Text>
+        <View style={styles.inputContainer}>
+          <Text style={styles.header}>Give your secret spot a name</Text>
 
+          <TextInput
+            style={styles.textInput}
+            autoCorrect={false}
+            value={text}
+            placeholder={this.props.placeholder} 
+            placeholderTextColor="white"
+            onChangeText={this.handleChangeTextCallBack}
+            onSubmitEditing={this.handleSubmitEditing}
+            clearButtomMode="always"
+          />
+        </View>
       </View>
     );
   }
@@ -67,40 +65,35 @@ SearchInput.defaultProps = {
   placeholder: '',
 };
 
-
 const styles = StyleSheet.create({
-
-  header: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    padding: '5%',
-  },
-  textInput: {
+  container: {
     position: 'absolute',
     width: '100%',
-    //flex: 1,
-    color: 'black',
-    backgroundColor: 'rgba(100,100,100,0.5)',
-    borderRadius: 5,
-  },
-  container: {
-    justifyContent: 'space-between', 
-    flexDirection: 'column-reverse',
-    flex: 1,
-    position: 'absolute',
-    backgroundColor: 'rgba(50,50,50,0.5)',
-    padding: '20%',
+    height: '100%',
+    justifyContent: 'center',
     alignItems: 'center',
-   marginLeft: '10%',
-   marginRight: '10%',
-
-    //height: 40,
-    width: '80%',
-    marginTop: '80%',
-    //marginHorizontal: 20,
-    //paddingHorizontal: 10,
-    borderRadius: 5,
-
+    alignContent: 'center',
   },
-
+  inputContainer: {
+    width: '90%',
+    flexDirection: 'column',
+    borderRadius: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  header: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    color: 'white',
+    fontSize: 16,
+    alignItems: 'stretch',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  textInput: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    alignItems: 'stretch',
+    textAlign: 'center',
+    color: 'white',
+  },
 });
