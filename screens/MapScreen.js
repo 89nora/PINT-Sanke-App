@@ -5,13 +5,9 @@ import * as Permissions from 'expo-permissions';
 import { Image, View, Text, StyleSheet, Animated, ImageBackground, TouchableOpacity, Easing, Slider, Button, Switch, Platform } from 'react-native';
 import Loading from '../utils/Loading.js';
 import GeoFenceComponent from '../components/GeoFenceComponent.js';
-import SearchInput from '../components/SearchInput.js';
-import { addPointOfInterest} from '../utils/PointsOfInterest.js';
+import MarkerInput from '../components/MarkerInput.js';
+import { addPointOfInterest,orderDistanceArray } from '../utils/PointsOfInterest.js';
 
-
-
-import { orderDistanceArray } from '../utils/PointsOfInterest.js';
-//import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class MapScreen extends Component {
 
@@ -19,7 +15,7 @@ export default class MapScreen extends Component {
     super(props);
 
     this.state = {
-      loaded: true,
+      loaded: false,
       location: null,
       region: null,
       marker: null,
@@ -27,15 +23,15 @@ export default class MapScreen extends Component {
       sliderValue: 30,
       Zone : false,
       ZoneText : 'non-sense',
-      showSearchInput: false,
-      SearchInput: '',
+      showTextInput: false,
+      TextInput: '',
       onPressLatitude: null, 
       onPressLongitude: null,
     };
-    console.log('constructor_boolValue: ' + this.state.switchValue);
-    this.spinValue = new Animated.Value(0)
-    //loading.load(v => this.setState({ loaded: true }));
 
+   // We declare spinValue as a new Animated.Value and pass in 0 (zero).
+    this.spinValue = new Animated.Value(0)
+    Loading.load(v => this.setState({ loaded: true }));
   }
 
  componentWillMount() {
@@ -44,6 +40,7 @@ export default class MapScreen extends Component {
 
   async componentDidMount()   
   {
+
     this.spin()
 
     await this.AskPermission(); // Check that we have permission to access location data - ask if we don't 
@@ -67,8 +64,6 @@ export default class MapScreen extends Component {
 
           error: null,
         });
-         // Just in case we want to log while debugging
-        //console.group(pointsOfInterest);
       }
     );
   }
@@ -80,7 +75,6 @@ export default class MapScreen extends Component {
 
  AskPermission  = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    console.log('Asking for geo permission: ' + status);
     if (status !== 'granted') {
       this.setState({
         errorMessage: 'Permission to access location was denied',
@@ -90,7 +84,6 @@ export default class MapScreen extends Component {
 
 
   toggleSwitch = (value) => {
-    console.log('switchValue:' + value);
     this.setState({ switchValue: value });
   }
 
@@ -124,10 +117,9 @@ export default class MapScreen extends Component {
       marker: {
         latlng: location.coords
       },
-      loaded: true,
+      //loaded: true,
 
     });
-    console.log('this was executed! ');
   };
 
 
@@ -137,21 +129,21 @@ export default class MapScreen extends Component {
       this.spinValue,
       {
         toValue: 1,
-        duration: 6000,
+        duration: 5000,
         easing: Easing.linear
       }
+      //We call start() on this Animated.timing method, and pass in a callback of this.spin which will be called 
+      //when the animation is completed, basically creating an infinite animation
     ).start(() => this.spin())
   }
 
-  myCallback = (dataFromGeofence) => {
-    console.log('DATA from geofence: ' + dataFromGeofence);
+  showTextInputCallback = (dataFromGeofence) => {
     this.setState({
-      showSearchInput: dataFromGeofence,
+      showTextInput: dataFromGeofence,
     })
    }
 
-   myCallback2 = (onPressLatitude, onPressLongitude) => {
-     console.log('these are the coords for new marker: ' + onPressLatitude + onPressLongitude);
+   getCoordsNewMakerCallback = (onPressLatitude, onPressLongitude) => {
      this.setState({
        onPressLatitude: onPressLatitude,
        onPressLongitude: onPressLongitude,
@@ -159,28 +151,22 @@ export default class MapScreen extends Component {
    }
 
    handleChangeInputCallback = (textInput) => {
-    console.log('DET er onChange tekstinputtet: ' + textInput);
     this.setState({
-      SearchInput: textInput,
+      TextInput: textInput,
     })
    }
 
    
    handleUpdateInput = (textInput) => {
-    console.log('DET er tekstinputtet: ' + textInput);
     this.setState({
-      showSearchInput: false,
+      showTextInput: false,
       ZoneText: textInput,
-      //SearchInput: textInput,
     })
-    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100,this.state.SearchInput );
+    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100,this.state.TextInput );
    }
 
-    addMarker = (latitude,longitude, searchInput, radius ) => { 
-      addPointOfInterest(latitude, longitude, searchInput, radius);
-      // console.log(pointsOfInterest)
-      // sætter state for at opdatere, så der ikke kommer delay når markers addes
-       //this.setState({})
+    addMarker = (latitude,longitude, TextInput, radius ) => { 
+      addPointOfInterest(latitude, longitude, TextInput, radius);
           }
 
   render() {
@@ -189,10 +175,7 @@ export default class MapScreen extends Component {
       outputRange: ['0deg', '360deg']
     })
 
-    console.log("Marker is: " + this.state.marker)
-
     return (
-      //ERRORMESSAGE IS NEW
       this.state.loaded ? // ternary if - loading screen
         <View style={styles.container}>
 
@@ -200,28 +183,25 @@ export default class MapScreen extends Component {
           {this.state.marker !== null ? 
           (
             <GeoFenceComponent
-            // sender values så de er available som props i geofencecomponet.js
+            // sender values så de er available som props i geofencecomponet
             showCoordinates={false} 
             inZone={this.inTheZone} 
             mapRegion={this.state.region}
             userMarker={this.state.marker.latlng}
             switchValue={this.state.switchValue}
             sliderValue={this.state.sliderValue}
-            callbackFromParent={this.myCallback}
-            callbackFromParent2={this.myCallback2}
-            //searchInput= {this.state.SearchInput}
-            //newMarkerCoords= {this.state.onPressLatitude, this.state.onPressLongitude}
+            callbackFromParentInput={this.showTextInputCallback}
+            callbackFromParentCoords={this.getCoordsNewMakerCallback}
             >    
             </GeoFenceComponent>
           ) : (console.log("Error")) }
 
 
-          {this.state.showSearchInput ? 
+          {this.state.showTextInput ? 
          
-          <SearchInput
+          <MarkerInput
             placeholder="Write name here..."
             callbackOnChangeText={this.handleChangeInputCallback}
-            //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation
             onSubmit={this.handleUpdateInput}
           />
           
@@ -266,10 +246,10 @@ export default class MapScreen extends Component {
 
         <ImageBackground style={styles.backgroundImage} source={require('../assets/foodism1.jpg')}  >
 
-          <Animated.Image
+          <Animated.Image 
             style={{
-              marginTop: '25%',
-              width: '78%',
+              marginTop: '25%',  
+              width: '90%',
               height: '50%',
               transform: [{ rotate: spin }]
             }}
@@ -306,9 +286,6 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: '50%',
-  },
-  button: {
-    //position: 'absolute',
   },
   paragraph: {
     color: 'green',

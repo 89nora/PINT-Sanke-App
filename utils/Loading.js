@@ -3,6 +3,6 @@ export default class Loading {
     //a setState function from startScreen component's constructor
     //YEAH
     static load(callback) {
-        setTimeout(callback, 2000);
+        setTimeout(callback, 6000);
     }
 }
