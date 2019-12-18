@@ -26,19 +26,14 @@ export default class GeoFenceComponent extends Component {
  
  componentDidMount()   
   {
-
-        //tjekker kun radius på den forreste i den sorterede liste
-        if ( pointsOfInterest[0].currentDistance<pointsOfInterest[0].radius)
-        {
-        
-          this.props.inZone(true,pointsOfInterest[0]);
-          //console.log(this.props.showCoordinates);
-
-        }
-         // Just in case we want to log while debugging
-        //console.group(pointsOfInterest);
-      
-    
+    //tjekker kun radius på den forreste i den sorterede liste
+    if ( pointsOfInterest[0].currentDistance<pointsOfInterest[0].radius)
+    {
+      this.props.inZone(true,pointsOfInterest[0]);
+      //console.log(this.props.showCoordinates);
+    }
+      // Just in case we want to log while debugging
+      //console.group(pointsOfInterest);
   }
   
   componentWillUnmount() 
@@ -120,7 +115,7 @@ this.props.callbackFromParent2(onPressLatitude, onPressLongitude);
             onPress = {() => {}}
             //onPress = {() => {this.someFn(p.whatis)}}
             >
-            <Image source={(this.props.switchValue == true && Zone) ?
+            <Image source={(this.props.switchValue == true && p.currentDistance < p.radius) ?
               (require('../assets/greenApple.png'))
             :
               (require('../assets/apple1.png'))} />

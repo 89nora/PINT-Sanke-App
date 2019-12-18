@@ -6,10 +6,7 @@ import { Image, View, Text, StyleSheet, Animated, ImageBackground, TouchableOpac
 import Loading from '../utils/Loading.js';
 import GeoFenceComponent from '../components/GeoFenceComponent.js';
 import SearchInput from '../components/SearchInput.js';
-import { addPointOfInterest} from '../utils/PointsOfInterest.js';
-
-
-
+import { addPointOfInterest, pointsOfInterest} from '../utils/PointsOfInterest.js';
 import { orderDistanceArray } from '../utils/PointsOfInterest.js';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -102,9 +99,9 @@ export default class MapScreen extends Component {
   {
      this.setState({
        Zone : z, 
-       ZoneText:p.whatis});
+       ZoneText:p.whatis
+      });
   };
-
 
   // _getLocationAsync will check if device allows permission to use location of device
   _getLocationAsync = async () => {
@@ -164,14 +161,10 @@ export default class MapScreen extends Component {
       SearchInput: textInput,
     })
    }
-
    
-   handleUpdateInput = (textInput) => {
-    console.log('DET er tekstinputtet: ' + textInput);
+   handleUpdateInput = () => {
     this.setState({
       showSearchInput: false,
-      ZoneText: textInput,
-      //SearchInput: textInput,
     })
     this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100,this.state.SearchInput );
    }
@@ -189,7 +182,7 @@ export default class MapScreen extends Component {
       outputRange: ['0deg', '360deg']
     })
 
-    console.log("Marker is: " + this.state.marker)
+    console.log("MapScreen > Marker: " + JSON.stringify(this.state.marker));
 
     return (
       //ERRORMESSAGE IS NEW
@@ -259,12 +252,12 @@ export default class MapScreen extends Component {
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.button}
-              onPress={() => this.props.navigation.navigate('InterestPoint', {what:this.state.ZoneText})}
+              onPress={() => this.props.navigation.navigate('InterestPoint', {what:pointsOfInterest[0].whatis})}
               >
               <Text style={styles.btnText}>
-                {'closest spot' + this.state.ZoneText}
+              { pointsOfInterest[0].whatis ? pointsOfInterest[0].whatis : 'closest spot' }
               </Text>
             </TouchableOpacity>
           </View>

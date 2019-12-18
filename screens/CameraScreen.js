@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 202, 0, 0.6)',
     height: 50,
     width: 50,
-    borderWidth: 2,
+    borderWidth: 3,
     borderRadius: 100,
   }
 });
