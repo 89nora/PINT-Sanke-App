@@ -3,22 +3,17 @@ import { StyleSheet, Text, View, Platform, TextInput } from 'react-native';
 import PropTypes from 'prop-types';
 
 
-export default class SearchInput extends React.Component {
+export default class MarkerInput extends React.Component {
 
-  //Property transformation from Babel allows simplified constructor.
   state = {
     text: '',
   };
 
 
-
-
-  //only stores the data inside text prop
   handleChangeTextCallBack = (text) => {
+    //both sends back info to parent component and sets state inside MarkerInput
     this.props.callbackOnChangeText(text);
-
     this.setState({ text: text });
-    console.log('UPDATED: ' + this.state.text);
   };
 
   handleSubmitEditing = () => {
@@ -32,10 +27,7 @@ export default class SearchInput extends React.Component {
   };
 
 
-  //TextInput has several props, props can be objects, properties or functions.
-  //Bind makes sure the handleChangeText method is binded to the TextInput component.
   render() {
-
     const { text } = this.state;
 
     return (
@@ -58,12 +50,12 @@ export default class SearchInput extends React.Component {
 }
 
 //helps validating the props given to this component. Making sure there of the right type.
-SearchInput.propTypes = {
+MarkerInput.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
 };
 
-SearchInput.defaultProps = {
+MarkerInput.defaultProps = { 
   placeholder: '',
 };
 
@@ -78,7 +70,6 @@ const styles = StyleSheet.create({
   textInput: {
     position: 'absolute',
     width: '100%',
-    //flex: 1,
     color: 'black',
     backgroundColor: 'rgba(100,100,100,0.5)',
     borderRadius: 5,
@@ -93,12 +84,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
    marginLeft: '10%',
    marginRight: '10%',
-
-    //height: 40,
     width: '80%',
     marginTop: '80%',
-    //marginHorizontal: 20,
-    //paddingHorizontal: 10,
     borderRadius: 5,
 
   },
