@@ -158,12 +158,20 @@ export default class MapScreen extends Component {
     })
    }
 
+   handleChangeInputCallback = (textInput) => {
+    console.log('DET er onChange tekstinputtet: ' + textInput);
+    this.setState({
+      SearchInput: textInput,
+    })
+   }
+
+   
    handleUpdateInput = (textInput) => {
     console.log('DET er tekstinputtet: ' + textInput);
     this.setState({
       showSearchInput: false,
       ZoneText: textInput,
-      SearchInput: textInput,
+      //SearchInput: textInput,
     })
     this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100,this.state.SearchInput );
    }
@@ -201,7 +209,7 @@ export default class MapScreen extends Component {
             sliderValue={this.state.sliderValue}
             callbackFromParent={this.myCallback}
             callbackFromParent2={this.myCallback2}
-            searchInput= {this.state.SearchInput}
+            //searchInput= {this.state.SearchInput}
             //newMarkerCoords= {this.state.onPressLatitude, this.state.onPressLongitude}
             >    
             </GeoFenceComponent>
@@ -209,14 +217,14 @@ export default class MapScreen extends Component {
 
 
           {this.state.showSearchInput ? 
-          <View style={styles.searchContainer}>
+         
           <SearchInput
-            placeholder="Search any city"
+            placeholder="Write name here..."
+            callbackOnChangeText={this.handleChangeInputCallback}
             //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation
-            onChangeText={this.handleUpdateInput}
             onSubmit={this.handleUpdateInput}
           />
-           </View>
+          
            :
           null
         }
@@ -295,16 +303,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     marginTop: '50%',
-  },
-  searchContainer: {
-    flexDirection: 'column',
-    backgroundColor: 'white',
-    padding: '20%',
-    width: '100%',
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    position: 'absolute',
-    marginTop: '80%',
   },
   slider: {
     width: '50%',
