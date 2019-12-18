@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { Button, Image, View, StyleSheet, ScrollView, TouchableOpacity, Text, Dimensions, FlatList } from 'react-native';
+import { Button, Image, View, StyleSheet, ScrollView, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { AsyncStorage } from 'react-native';
-export default class ImagePickerExample extends React.Component {
+
+export default class InterestScreen extends React.Component {
+
   state = {
-    image: null,
     images: [],
   };
 
@@ -22,16 +23,14 @@ export default class ImagePickerExample extends React.Component {
     try {
       imageId = await AsyncStorage.getItem('imageId') || 'none';
 
-      //imageId = await AsyncStorage.getItem('imageId') || 'none'; 
-      console.log('image received from async: ' + imageId);
       this.setState({ images: this.state.images.concat(imageId) });
     } catch (error) {
       // Error retrieving data
       console.log(error.message);
     }
-    console.log('this all the images: ' + this.state.images);
     return imageId;
   }
+
   componentDidMount() {
     this.getPermissionAsync();
   }
@@ -56,24 +55,19 @@ export default class ImagePickerExample extends React.Component {
     console.log(result);
 
     if (!result.cancelled) {
-        this.setState({images: this.state.images.concat(result.uri)});
+      this.setState({ images: this.state.images.concat(result.uri) });
 
-      //this.setState({ image: result.uri });
       this.saveImageId(result.uri);
-      //this.setState({ image: result.uri });
     }
   };
 
   saveImageId = async imageId => {
     try {
       await AsyncStorage.setItem('imageId', imageId);
-      console.log('all saved images: ' + this.state.images);
     } catch (error) {
       // Error retrieving data
       console.log(error.message);
-      //this.setState({ image: result.uri });
     }
-    console.log('this is the image id: ' + imageId);
   };
 
   showImages = () => {

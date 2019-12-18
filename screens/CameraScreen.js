@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Button, CameraRoll, Platform, Alert } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, CameraRoll, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
-//import * as ImagePicker from 'expo-image-picker';
 
-export default class App extends Component {
+export default class CameraScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,7 +12,6 @@ export default class App extends Component {
       hasCameraRollPermissions: false,
       ratio: '16:9',
       photo: '',
-      //image: null, 
     };
   }
 
@@ -23,7 +21,6 @@ export default class App extends Component {
     this.setState({
       hasCameraPermissions: status === 'granted',
       hasCameraRollPermissions: status === 'granted',
-      //pictureUri: '',
       photo: '',
     });
   }
@@ -40,7 +37,6 @@ export default class App extends Component {
 
   takePicture = () => {
     if (this.camera) {
-      //console.log("PHOTO: " + this.camera.takePictureAsync().then(data => console.log(data.uri)));
       this.camera.takePictureAsync().then(data => this.onPictureSaved(data.uri));
     }
   }
@@ -72,7 +68,6 @@ export default class App extends Component {
               style={styles.camera}
               type={Camera.Constants.Type.back}
             ratio={this.state.ratio}
-            //onCameraReady={this.collectPictureSizes}
             >
             </Camera>
           </View>
@@ -118,3 +113,5 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   }
 });
+
+
