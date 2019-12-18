@@ -7,8 +7,6 @@ import MapScreen from './screens/MapScreen.js';
 import CameraScreen from './screens/CameraScreen.js';
 import InterestScreen from './screens/InterestScreen.js';
 
-//TAB NAVIGATOR - THIS SCRIPT NOW BELONGS TO REACT-NAVIGATION-TABS
-
 
 const MapStack = createStackNavigator({
   Map: {screen: MapScreen},
