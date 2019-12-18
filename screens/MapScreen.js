@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import  {View, Text, StyleSheet, Animated, ImageBackground, Easing, Slider, Button, Switch } from 'react-native';
+import  {View, Text, StyleSheet, Animated, ImageBackground, Easing, Slider, Button, Switch, TouchableOpacity } from 'react-native';
 import Loading from '../utils/Loading.js';
 import GeoFenceComponent from '../components/GeoFenceComponent.js';
-import SearchInput from '../components/SearchInput.js';
+import MarkerInput from '../components/MarkerInput.js';
 import { addPointOfInterest, pointsOfInterest} from '../utils/PointsOfInterest.js';
 import { orderDistanceArray } from '../utils/PointsOfInterest.js';
-//import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class MapScreen extends Component {
 
@@ -23,8 +22,8 @@ export default class MapScreen extends Component {
       sliderValue: 30,
       Zone : false,
       ZoneText : '',
-      showSearchInput: false,
-      SearchInput: '',
+      showTextInput: false,
+      TextInput: '',
       onPressLatitude: null, 
       onPressLongitude: null,
     };
@@ -81,7 +80,6 @@ export default class MapScreen extends Component {
       });
     }
   };
-
 
   toggleSwitch = (value) => {
     this.setState({ switchValue: value });
@@ -143,29 +141,30 @@ export default class MapScreen extends Component {
     })
    }
 
-   getCoordsNewMakerCallback = (onPressLatitude, onPressLongitude) => {
-     this.setState({
-       onPressLatitude: onPressLatitude,
-       onPressLongitude: onPressLongitude,
-    })
-   }
-
-   handleChangeInputCallback = (textInput) => {
+  getCoordsNewMakerCallback = (onPressLatitude, onPressLongitude) => {
     this.setState({
-      TextInput: textInput,
+      onPressLatitude: onPressLatitude,
+      onPressLongitude: onPressLongitude,
     })
-   }
+  }
+
+  handleChangeInputCallback = (textInput) => {
+  this.setState({
+    TextInput: textInput,
+    })
+  }
    
-   handleUpdateInput = () => {
+   handleUpdateInput = (textInput) => {
     this.setState({
-      showSearchInput: false,
+      showTextInput: false,
+      ZoneText: textInput,
     })
-    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100,this.state.TextInput );
+    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100, this.state.TextInput );
    }
 
-    addMarker = (latitude,longitude, TextInput, radius ) => { 
-      addPointOfInterest(latitude, longitude, TextInput, radius);
-          }
+  addMarker = (latitude, longitude, radius, TextInput,  ) => { 
+    addPointOfInterest(latitude, longitude, radius, TextInput);
+  }
 
   render() {
     const spin = this.spinValue.interpolate({
@@ -196,9 +195,9 @@ export default class MapScreen extends Component {
             (console.log("Error"))
           }
 
-          {this.state.showSearchInput ? // ternary if - search input
+          {this.state.showTextInput ? // ternary if - search input
          
-            <SearchInput
+            <MarkerInput
               placeholder="Write name here..."
               callbackOnChangeText={this.handleChangeInputCallback}
               //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation

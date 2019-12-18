@@ -5,6 +5,7 @@ import { getRhumbLineBearing } from 'geolib';
 
 export default class MarkerInput extends React.Component {
 
+  //Property transformation from Babel allows simplified constructor.
   state = {
     text: '',
   };
@@ -87,26 +88,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textInput: {
-    position: 'absolute',
-    width: '100%',
-    color: 'black',
-    backgroundColor: 'rgba(100,100,100,0.5)',
-    borderRadius: 5,
+    paddingTop: 20,
+    paddingBottom: 20,
+    alignItems: 'stretch',
+    textAlign: 'center',
+    color: 'white',
   },
-  container: {
-    justifyContent: 'space-between', 
-    flexDirection: 'column-reverse',
-    flex: 1,
-    position: 'absolute',
-    backgroundColor: 'rgba(50,50,50,0.5)',
-    padding: '20%',
-    alignItems: 'center',
-   marginLeft: '10%',
-   marginRight: '10%',
-    width: '80%',
-    marginTop: '80%',
-    borderRadius: 5,
-
-  },
-
 });

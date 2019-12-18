@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
   },
   snapButton: {
     borderColor: 'rgba(255, 202, 0, 0.6)',
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
     borderWidth: 3,
     borderRadius: 100,
   }

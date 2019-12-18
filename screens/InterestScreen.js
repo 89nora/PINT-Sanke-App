@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Button, Image, View, StyleSheet, ScrollView, Text } from 'react-native';
+import { Button, Image, View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { AsyncStorage } from 'react-native';
 
 export default class InterestScreen extends React.Component {
-
   state = {
     images: [],
   };
@@ -56,7 +55,6 @@ export default class InterestScreen extends React.Component {
 
     if (!result.cancelled) {
       this.setState({ images: this.state.images.concat(result.uri) });
-
       this.saveImageId(result.uri);
     }
   };
@@ -109,9 +107,9 @@ export default class InterestScreen extends React.Component {
         </TouchableOpacity>
 
         <ScrollView style={styles.scrollView} >
+          {this.showImages()}
         </ScrollView>
         
-        {this.showImages()}
       <Text style={styles.header}>{ params.what }</Text>
       </View>
       );
