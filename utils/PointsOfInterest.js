@@ -1,11 +1,10 @@
-
 import {getDistance} from 'geolib'; // get. Distance function from a library full of usewfull functions  when doing math on geo-coordinates
 // See : https://www.npmjs.com/package/geolib
 
-// ----------------------- Data structures and helper functions for doing the GeoFencing. This could/should of course go
-//in a separate module. W ekeep it here as paert of teaching for now.
 
-export let pointsOfInterest = []; // Making a place whewre we can hold on to our pints of interest. We don't know yet exactly how many pointsOfInterest we want when we start out
+//Data structures and helper functions for doing the GeoFencing. 
+
+export let pointsOfInterest = []; // Making a place where we can hold on to our points of interest. 
 
 class pointOfInterest  // Defining our own 'type' : pointOfInterest. Every interestpoint has coords, radius, whatis, current distance
 {
@@ -14,20 +13,18 @@ constructor(coords, radius, whatis)
 this.coords= coords; // Latitude and Longitude
 this.radius = radius; // Radius in circle of interest
 this.whatis = whatis; // Short txt to describe
-// ***make something to hold an image on markers this.image = image;
 this.currentDistance = 99999;  // Just put me as far as way as I can to begin with ...
-
 };
 }
 
 //then you can add new point of interest with this function
-export function addPointOfInterest(lati,longi,radius, whatis) // Making it easier to add new pointOfInterest to pointsOfInterest
+export function addPointOfInterest(lati,longi,radius, whatis) 
 {
 pointsOfInterest.push(new pointOfInterest({latitude:lati,longitude:longi},radius,whatis)) 
-
 }
 
-export function orderDistanceArray(currentCoords) // calculate distance from currentpos to all points of interest and sort pointsOfInterest array 
+// calculate distance from currentpos to all points of interest and sort pointsOfInterest array 
+export function orderDistanceArray(currentCoords)
       //in ascending order of distance
 {
 pointsOfInterest.forEach(p=>  {p.currentDistance = getDistance(currentCoords, p.coords, accuracy = 1);});                             
@@ -38,23 +35,19 @@ if (p1.currentDistance  < p2.currentDistance ) {return -1;}
 if (p1.currentDistance  > p2.currentDistance ) {return 1;}
 return 0;
 }
-); // Standard in-place sorting of array in order of ascending distance to current location
+); 
+// Standard in-place sorting of array in order of ascending distance to current location
 // See documentation on sort with compare function here: 
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
 }
 
 
-export function initalizePointsOfInterest() // // Let throw four interesting places in here. Called when starting the show
+export function initalizePointsOfInterest() 
 {
-/* Get coordinates by cut&paste from Google Maps :
-Rundtårn : 55.681547,12.575751
-Rosenborg:  55.685970,12.577291
-Regensen: 55.681133,12.575229
-Børsen: 55.676038,12.584014
-*/
-addPointOfInterest(55.685970,12.577291,2000,  'Æbletræ');
-addPointOfInterest(55.681547,12.575751201,2000, 'Krydderurter');
-addPointOfInterest(55.676038,12.584014,2000,'Svampe');
-addPointOfInterest(55.673409, 12.579428,2000,'Jordbær');
+addPointOfInterest(55.685536,12.572966,2000,  'Botanisk Have');
+addPointOfInterest(55.700011, 12.569528,2000, 'Fælledparken Østerbro');
+addPointOfInterest(55.670802, 12.520449,2000,'Søndermarken');
+addPointOfInterest(55.671907, 12.613360,2000,'Amager Øst');
+addPointOfInterest(55.653841, 12.575903,2000,'Monke-ringen');
 };
 

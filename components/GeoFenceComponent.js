@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, Dimensions, View, Image,  } from 'react-native';
+import { Text, StyleSheet, Dimensions, Image,  } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { initalizePointsOfInterest, pointsOfInterest} from '../utils/PointsOfInterest.js';
-import Apple from '../assets/apple1.png';
 
 export default class GeoFenceComponent extends Component {
   constructor(props) {
@@ -15,7 +14,6 @@ export default class GeoFenceComponent extends Component {
  
  componentDidMount()   
   {
-
         //tjekker kun radius på den forreste i den sorterede liste
         if ( pointsOfInterest[0].currentDistance<pointsOfInterest[0].radius)
         {
@@ -28,20 +26,7 @@ export default class GeoFenceComponent extends Component {
   {
     this.watchId.remove(); // stop watching for location changes
   }
-  
-  getImgFromName(name) {
-    switch (name) {
-      case 'Æbletræ':
-        return Apple;
-      case 'Krydderurter':
-        return Apple;
-      case 'Svampe':
-        return Apple;
-      case 'Jordbær':
-        return Apple;
-    }
-  }
-
+ 
 
  markerInputFn = (onPressInfo) => {
   this.props.callbackFromParentInput(onPressInfo);
@@ -54,10 +39,8 @@ this.props.callbackFromParentCoords(onPressLatitude, onPressLongitude);
   render() {
        
     return (
-      console.log("geofence value " + this.props.switchValue),
       // initialRegion sørger for at mapped ikke hele tiden zoomer tilbage til start positionen når det opdateres
       <MapView style={styles.mapStyle} initialRegion={this.props.mapRegion} onLongPress={(e) => {
-         console.log(e.nativeEvent.coordinate)
          this.markerInputFn(true),
          this.markerCoordsFn(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
          }}>
