@@ -28,23 +28,6 @@ export default class App extends Component {
     });
   }
 
- /** 
-  * skal fjernes
-  * _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
-  }
-**/
   collectPictureSizes = async () => {
     ratios = await this.getRatios();
     console.log(ratios);
@@ -68,44 +51,13 @@ export default class App extends Component {
      //pictureUri: photo,
      // image: photo,
     });
-
-    /*if (Platform.OS === 'android') {
-      RNFetchBlob
-        .config({
-          fileCache: true,
-          appendExt: 'jpg'
-        })
-        .fetch('GET', image.urls.small)
-        .then((res) => {
-          CameraRoll.saveToCameraRoll(res.path())
-            .then(Alert.alert('Success', 'Photo added to camera roll!'))
-            .catch(err => console.log('err:', err))
-        })
-    } else*/ {
+    {
       console.log("PhotoURI: " + photo);
       CameraRoll.saveToCameraRoll(photo, 'photo')
         .then(Alert.alert('Success', 'Photo added to camera roll!'))
     }
   }
-/* 
 
-{this.state.showPicture ? (
-              <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-            ) : (
-                <Camera
-                  ref={ref => {
-                    this.camera = ref;
-                  }}
-                  style={styles.camera}
-                  type={Camera.Constants.Type.back}
-                //ratio={this.state.ratio}
-                //onCameraReady={this.collectPictureSizes}
-                >
-                </Camera>
-              )}
-
-
-*/
   render() {
     return (
       <View style={styles.container}>
@@ -133,10 +85,6 @@ export default class App extends Component {
           >
           </TouchableOpacity>
         </View>
-        <Button
-          title="Pick an image from camera roll"
-          onPress={this._pickImage}
-        />
       </View >
     );
   }
@@ -156,79 +104,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     aspectRatio: 9 / 16,
   },
-  topBar: {
-    flex: 0.1,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingTop: Constants.statusBarHeight,
-  },
   bottomBar: {
     flex: 0.2,
     flexDirection: 'row',
-    paddingBottom: 5,
-    backgroundColor: 'white',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
   snapButton: {
-    borderColor: 'rgba(0, 0, 0, 0.6)',
+    borderColor: 'rgba(255, 202, 0, 0.6)',
     height: 50,
     width: 50,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 100,
   }
 });
-
-/* import React, { Component } from 'react';
-import { View, Text, StyleSheet,TouchableOpacity, Image } from 'react-native';
-
-export default class CameraScreen extends Component {
-    constructor(props) {
-      super(props);
-      this.state =
-        {
-
-        };
-    }
-
-    render() {
-      return (
-        <View style={styles.container}>
-
-        </View>
-      );
-    }
-  }
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'column-reverse',
-      alignItems: 'center',
-      backgroundColor: '#FFCA00',
-    },
-    toggleContainer: {
-      flex: 1,
-      width: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    buttonContainer: {
-      position: 'absolute',
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      padding: '10%',
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      width: '100%',
-    },
-    paragraph: {
-      color: 'black',
-      fontSize: 68,
-      textAlign: 'center'
-    },
-    slider: {
-      width: '50%',
-    }
-
-  }) lol */
