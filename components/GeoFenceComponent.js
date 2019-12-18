@@ -61,12 +61,12 @@ export default class GeoFenceComponent extends Component {
   }
   //addMarker function gets coordinates passed from onPress  event in render. 
   //Spread operator to keep the list as it is, and add new stuff. This.state.newMarkers what objects it consist of.
-  addMarker = (latitude, longitude ) => { 
-     addPointOfInterest(latitude, longitude, this.props.sliderValue*100, this.props.searchInput)
-     console.log(pointsOfInterest)
+  //addMarker = (latitude, longitude, searchInput ) => { 
+    // addPointOfInterest(latitude, longitude, this.props.sliderValue*100, searchInput)
+    // console.log(pointsOfInterest)
     // sætter state for at opdatere, så der ikke kommer delay når markers addes
-     this.setState({})
-        }
+   //  this.setState({})
+    //    }
 
  /**   addMarker2 = (latitude, longitude) =>{
       this.setState({
@@ -86,6 +86,11 @@ export default class GeoFenceComponent extends Component {
   this.props.callbackFromParent(onPressInfo);
 }
 
+markerCoordsFn = (onPressLatitude, onPressLongitude) => {
+this.props.callbackFromParent2(onPressLatitude, onPressLongitude);
+}
+
+//this.addMarker(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
   render() {
     // tje
    
@@ -96,21 +101,23 @@ export default class GeoFenceComponent extends Component {
       // initialRegion sørger for at mapped ikke hele tiden zoomer tilbage til start positionen når det opdateres
       <MapView style={styles.mapStyle} initialRegion={this.props.mapRegion} onLongPress={(e) => {
          console.log(e.nativeEvent.coordinate)
-        this.addMarker(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude) }}>
+         this.someFn(true),
+         this.markerCoordsFn(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
+         }}>
            
         <Marker coordinate={this.props.userMarker}>
           
           <Image source={require('../assets/userMarker.png')} style={{ width: 50, height: 50 }} />
         </Marker>
   
-        {pointsOfInterest.map((p, index) => (  
+        {pointsOfInterest.map((p, index) => ( 
             // Create new temporary array with each of the the points of interest turned into individual
             //Markers in the new array. The new temporary array of Markers is hereafter displayed  as Markers on the map              
           <Marker
             key={index}
             coordinate={p.coords}
             title={p.whatis}
-            onPress = {() => {this.someFn(true)}}
+            onPress = {() => {}}
             //onPress = {() => {this.someFn(p.whatis)}}
             >
             <Image source={(this.props.switchValue == true  && p.currentDistance < p.radius) ? (require('../assets/greenApple.png')): (require('../assets/apple1.png'))} />

@@ -6,6 +6,8 @@ import { Image, View, Text, StyleSheet, Animated, ImageBackground, TouchableOpac
 import Loading from '../utils/Loading.js';
 import GeoFenceComponent from '../components/GeoFenceComponent.js';
 import SearchInput from '../components/SearchInput.js';
+import { addPointOfInterest} from '../utils/PointsOfInterest.js';
+
 
 
 import { orderDistanceArray } from '../utils/PointsOfInterest.js';
@@ -27,6 +29,8 @@ export default class MapScreen extends Component {
       ZoneText : 'non-sense',
       showSearchInput: false,
       SearchInput: '',
+      onPressLatitude: null, 
+      onPressLongitude: null,
     };
     console.log('constructor_boolValue: ' + this.state.switchValue);
     this.spinValue = new Animated.Value(0)
@@ -146,6 +150,14 @@ export default class MapScreen extends Component {
     })
    }
 
+   myCallback2 = (onPressLatitude, onPressLongitude) => {
+     console.log('these are the coords for new marker: ' + onPressLatitude + onPressLongitude);
+     this.setState({
+       onPressLatitude: onPressLatitude,
+       onPressLongitude: onPressLongitude,
+    })
+   }
+
    handleUpdateInput = (textInput) => {
     console.log('DET er tekstinputtet: ' + textInput);
     this.setState({
@@ -153,7 +165,15 @@ export default class MapScreen extends Component {
       ZoneText: textInput,
       SearchInput: textInput,
     })
+    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100,this.state.SearchInput );
    }
+
+    addMarker = (latitude,longitude, searchInput, radius ) => { 
+      addPointOfInterest(latitude, longitude, searchInput, radius);
+      // console.log(pointsOfInterest)
+      // sætter state for at opdatere, så der ikke kommer delay når markers addes
+       //this.setState({})
+          }
 
   render() {
     const spin = this.spinValue.interpolate({
@@ -180,7 +200,9 @@ export default class MapScreen extends Component {
             switchValue={this.state.switchValue}
             sliderValue={this.state.sliderValue}
             callbackFromParent={this.myCallback}
+            callbackFromParent2={this.myCallback2}
             searchInput= {this.state.SearchInput}
+            //newMarkerCoords= {this.state.onPressLatitude, this.state.onPressLongitude}
             >    
             </GeoFenceComponent>
           ) : (console.log("Error")) }
@@ -191,6 +213,7 @@ export default class MapScreen extends Component {
           <SearchInput
             placeholder="Search any city"
             //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation
+            onChangeText={this.handleUpdateInput}
             onSubmit={this.handleUpdateInput}
           />
            </View>

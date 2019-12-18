@@ -15,6 +15,7 @@ state = {
 
 //only stores the data inside text prop
 handleChangeText = (text) => {
+  const {onChangeText} = this.props;
   this.setState({text: text});
 };
 
