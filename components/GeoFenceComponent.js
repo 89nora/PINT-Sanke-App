@@ -120,7 +120,10 @@ this.props.callbackFromParent2(onPressLatitude, onPressLongitude);
             onPress = {() => {}}
             //onPress = {() => {this.someFn(p.whatis)}}
             >
-            <Image source={(this.props.switchValue == true  && p.currentDistance < p.radius) ? (require('../assets/greenApple.png')): (require('../assets/apple1.png'))} />
+            <Image source={(this.props.switchValue == true && Zone) ?
+              (require('../assets/greenApple.png'))
+            :
+              (require('../assets/apple1.png'))} />
             </Marker>
                          
           ))} 
