@@ -19,7 +19,7 @@ export default class MapScreen extends Component {
       region: null,
       marker: null,
       switchValue: false,
-      sliderValue: 30,
+      sliderValue: 3,
       Zone : false,
       ZoneText : '',
       showTextInput: false,
@@ -159,11 +159,14 @@ export default class MapScreen extends Component {
       showTextInput: false,
       ZoneText: textInput,
     })
-    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*100, this.state.TextInput );
+    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*1000, this.state.TextInput );
+    console.log(pointsOfInterest);
+    
    }
 
   addMarker = (latitude, longitude, radius, TextInput,  ) => { 
     addPointOfInterest(latitude, longitude, radius, TextInput);
+    
   }
 
   render() {
@@ -218,7 +221,7 @@ export default class MapScreen extends Component {
               <Slider
                 style={styles.slider}
                 step={1}
-                maximumValue={40}
+                maximumValue={4}
                 minimumValue={0}
                 onValueChange={this.sliderChange}
                 value={this.state.sliderValue}
