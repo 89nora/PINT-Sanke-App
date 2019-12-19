@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Text, StyleSheet, Dimensions, Image,  } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { initalizePointsOfInterest, pointsOfInterest} from '../utils/PointsOfInterest.js';
-
 export default class GeoFenceComponent extends Component {
   constructor(props) {
     super(props);
@@ -19,20 +18,16 @@ export default class GeoFenceComponent extends Component {
       this.props.inZone(true,pointsOfInterest[0]);
     } 
   }
-  
   componentWillUnmount() 
   {
     this.watchId.remove(); // stop watching for location changes
   }
- 
   markerInputFn = (onPressInfo) => {
     this.props.callbackFromParentInput(onPressInfo);
   }
-
   markerCoordsFn = (onPressLatitude, onPressLongitude) => {
     this.props.callbackFromParentCoords(onPressLatitude, onPressLongitude);
   }
-
   render() {
     return (
       // initialRegion sørger for at mapped ikke hele tiden zoomer tilbage til start positionen når det opdateres
@@ -52,7 +47,6 @@ export default class GeoFenceComponent extends Component {
             key={index}
             coordinate={p.coords}
             title={p.whatis}
-            onPress = {() => {}}
             >
             <Image source={(this.props.switchValue == true && p.currentDistance < p.radius) ?
               (require('../assets/greenApple.png'))
@@ -61,17 +55,10 @@ export default class GeoFenceComponent extends Component {
             />
           </Marker>
         ))} 
-       
-        {(this.props.showCoordinates) ? 
-          <Text style={styles.paragraph}>{text}</Text>
-        :
-          null
-        }
       </MapView> 
     );
   }
 }
-
 initalizePointsOfInterest();
 
 const styles = StyleSheet.create({

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "C4App",
-    "slug": "C4App",
+    "name": "Sanker",
+    "slug": "sanker",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -26,6 +26,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": "Tomasok eksempel App der demonstrerer simple GeoFencing funktionalitet  PINT2019."
+    "description": "Sanker gør det muligt at finde spiselige råvarer i naturen ved brug af geofencing og gelocation.",
+    "githubUrl": "https://github.com/Univertigo/PINT-Sanke-App"
   }
 }
