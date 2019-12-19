@@ -160,10 +160,13 @@ export default class MapScreen extends Component {
       ZoneText: textInput,
     })
     this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*1000, this.state.TextInput );
+    console.log(pointsOfInterest);
+    
    }
 
   addMarker = (latitude, longitude, radius, TextInput,  ) => { 
     addPointOfInterest(latitude, longitude, radius, TextInput);
+    
   }
 
   render() {
