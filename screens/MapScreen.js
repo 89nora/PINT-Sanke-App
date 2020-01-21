@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import  {View, Text, StyleSheet, Animated, ImageBackground, Easing, Slider, Button, Switch, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Animated, ImageBackground, Easing, Slider, Button, Switch, TouchableOpacity } from 'react-native';
 import Loading from '../utils/Loading.js';
 import GeoFenceComponent from '../components/GeoFenceComponent.js';
 import MarkerInput from '../components/MarkerInput.js';
-import { addPointOfInterest, pointsOfInterest} from '../utils/PointsOfInterest.js';
+import { addPointOfInterest, pointsOfInterest } from '../utils/PointsOfInterest.js';
 import { orderDistanceArray } from '../utils/PointsOfInterest.js';
 
 export default class MapScreen extends Component {
@@ -20,45 +20,46 @@ export default class MapScreen extends Component {
       marker: null,
       switchValue: false,
       sliderValue: 3,
-      Zone : false,
-      ZoneText : '',
+      Zone: false,
+      ZoneText: '',
       showTextInput: false,
       TextInput: '',
-      onPressLatitude: null, 
+      onPressLatitude: null,
       onPressLongitude: null,
     };
 
-   // We declare spinValue as a new Animated.Value and pass in 0 (zero).
+    // We declare spinValue as a new Animated.Value and pass in 0 (zero).
     this.spinValue = new Animated.Value(0)
     Loading.load(v => this.setState({ loaded: true }));
   }
 
- componentWillMount() {
+  componentWillMount() {
     this._getLocationAsync();
   }
 
-  async componentDidMount()   
-  {
+
+  async componentDidMount() {
 
     this.spin()
 
     await this.AskPermission(); // Check that we have permission to access location data - ask if we don't 
+    //Bed systemet om kontinuerligt at følge med og løbende rapportere min lokation/position (proaktivt)
     this.watchId = Location.watchPositionAsync(
-      {accuray:Location.Accuracy.BestForNavigation , timeInterval:1000, distanceInterval:1,  mayShowUserSettingsDialog:true},
+      { accuray: Location.Accuracy.BestForNavigation, timeInterval: 1000, distanceInterval: 1, mayShowUserSettingsDialog: true },
       // This is the callback function specifying  all the stuff that we want to happen whenver we have a new location
       (currentPosition) => {
-        orderDistanceArray({latitude: currentPosition.coords.latitude, longitude:currentPosition.coords.longitude});
-        
+        orderDistanceArray({ latitude: currentPosition.coords.latitude, longitude: currentPosition.coords.longitude });
+
         this.setState({
-          location:currentPosition,
+          location: currentPosition,
           region: {
             latitude: currentPosition.coords.latitude,
             longitude: currentPosition.coords.longitude,
-            latitudeDelta: 0.075, 
-            longitudeDelta: 0.075, 
+            latitudeDelta: 0.075,
+            longitudeDelta: 0.075,
           },
           marker: {
-                  latlng :currentPosition.coords
+            latlng: currentPosition.coords
           },
 
           error: null,
@@ -67,12 +68,11 @@ export default class MapScreen extends Component {
     );
   }
 
-  componentWillUnmount() 
-  {
+  componentWillUnmount() {
     this.watchId.remove(); // stop watching for location changes
   }
 
- AskPermission  = async () => {
+  AskPermission = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -89,12 +89,11 @@ export default class MapScreen extends Component {
     this.setState({ sliderValue: parseFloat(sliderValue) })
   }
 
-  inTheZone = (z,p)=>
-  {
-     this.setState({
-       Zone : z, 
-       ZoneText:p.whatis
-      });
+  inTheZone = (z, p) => {
+    this.setState({
+      Zone: z,
+      ZoneText: p.whatis
+    });
   };
 
   // _getLocationAsync will check if device allows permission to use location of device
@@ -103,6 +102,7 @@ export default class MapScreen extends Component {
 
     //getCurrentPositionAsync Returns a promise resolving to an object representing Location type.
     //this set the currentPosition when app first mounts
+    //Bed systemet om art bestemme min lokation en enkelt gang nu og her
     let location = await Location.getCurrentPositionAsync({});
     console.log('location: ' + location);
 
@@ -139,7 +139,7 @@ export default class MapScreen extends Component {
     this.setState({
       showTextInput: dataFromGeofence,
     })
-   }
+  }
 
   getCoordsNewMakerCallback = (onPressLatitude, onPressLongitude) => {
     this.setState({
@@ -149,24 +149,24 @@ export default class MapScreen extends Component {
   }
 
   handleChangeInputCallback = (textInput) => {
-  this.setState({
-    TextInput: textInput,
+    this.setState({
+      TextInput: textInput,
     })
   }
-   
-   handleUpdateInput = (textInput) => {
+
+  handleUpdateInput = (textInput) => {
     this.setState({
       showTextInput: false,
       ZoneText: textInput,
     })
-    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue*1000, this.state.TextInput );
+    this.addMarker(this.state.onPressLatitude, this.state.onPressLongitude, this.state.sliderValue * 1000, this.state.TextInput);
     console.log(pointsOfInterest);
-    
-   }
 
-  addMarker = (latitude, longitude, radius, TextInput,  ) => { 
+  }
+
+  addMarker = (latitude, longitude, radius, TextInput, ) => {
     addPointOfInterest(latitude, longitude, radius, TextInput);
-    
+
   }
 
   render() {
@@ -180,33 +180,33 @@ export default class MapScreen extends Component {
         <View style={styles.container}>
 
           {this.state.marker !== null ? // ternary if - marker is set
-          (
-            <GeoFenceComponent
-            // sender values så de er available som props i geofencecomponet
-            showCoordinates={false} 
-            inZone={this.inTheZone} 
-            mapRegion={this.state.region}
-            userMarker={this.state.marker.latlng}
-            switchValue={this.state.switchValue}
-            sliderValue={this.state.sliderValue}
-            callbackFromParentInput={this.showTextInputCallback}
-            callbackFromParentCoords={this.getCoordsNewMakerCallback}
-            >    
-            </GeoFenceComponent>
-            ) 
-          : // ternary else - marker is set
+            (
+              <GeoFenceComponent
+                // sender values så de er available som props i geofencecomponet
+                showCoordinates={false}
+                inZone={this.inTheZone}
+                mapRegion={this.state.region}
+                userMarker={this.state.marker.latlng}
+                switchValue={this.state.switchValue}
+                sliderValue={this.state.sliderValue}
+                callbackFromParentInput={this.showTextInputCallback}
+                callbackFromParentCoords={this.getCoordsNewMakerCallback}
+              >
+              </GeoFenceComponent>
+            )
+            : // ternary else - marker is set
             (console.log("Error"))
           }
 
           {this.state.showTextInput ? // ternary if - search input
-         
+
             <MarkerInput
               placeholder="Write name here..."
               callbackOnChangeText={this.handleChangeInputCallback}
               //Gives SearchInput an onSubmit prop, which evokes handleUpdateLocation
               onSubmit={this.handleUpdateInput}
             />
-           : // ternary else - search input
+            : // ternary else - search input
             null
           }
 
@@ -216,7 +216,7 @@ export default class MapScreen extends Component {
               value={this.state.switchValue}
               onValueChange={this.toggleSwitch}
             />
-              
+
             {this.state.switchValue ? ( // ternary if - switch on/off
               <Slider
                 style={styles.slider}
@@ -227,25 +227,25 @@ export default class MapScreen extends Component {
                 value={this.state.sliderValue}
                 disabled={false}
               />
-                )
+            )
               : // ternary else - switch on/off
-                (null)
-              }
-              {this.state.switchValue ? ( // ternary if - switch value
-                <Text> Geofence-radius: {this.state.sliderValue}km </Text>
-                )
+              (null)
+            }
+            {this.state.switchValue ? ( // ternary if - switch value
+              <Text> Geofence-radius: {this.state.sliderValue}km </Text>
+            )
               :// ternary else - switch value
-                (null)
-              }
+              (null)
+            }
           </View>
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => this.props.navigation.navigate('InterestPoint', {what:pointsOfInterest[0].whatis})}
-              >
+              onPress={() => this.props.navigation.navigate('InterestPoint', { what: pointsOfInterest[0].whatis })}
+            >
               <Text style={styles.btnText}>
-              { pointsOfInterest[0].whatis ? pointsOfInterest[0].whatis : 'closest spot' }
+                {pointsOfInterest[0].whatis ? pointsOfInterest[0].whatis : 'closest spot'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -256,9 +256,9 @@ export default class MapScreen extends Component {
 
         <ImageBackground style={styles.backgroundImage} source={require('../assets/foodism1.jpg')}  >
 
-          <Animated.Image 
+          <Animated.Image
             style={{
-              marginTop: '25%',  
+              marginTop: '25%',
               width: '90%',
               height: '50%',
               transform: [{ rotate: spin }],

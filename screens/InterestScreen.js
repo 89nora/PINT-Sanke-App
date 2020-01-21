@@ -92,15 +92,15 @@ export default class InterestScreen extends React.Component {
     return temp_image;
   };
 
-  render(){
+  render() {
     const { params } = this.props.navigation.state;
 
-      return(
-        <View style={styles.container}>
+    return (
+      <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
           onPress={this._pickImage}
-          >
+        >
           <Text style={styles.btnText}>
             camera roll
           </Text>
@@ -109,10 +109,10 @@ export default class InterestScreen extends React.Component {
         <ScrollView style={styles.scrollView} >
           {this.showImages()}
         </ScrollView>
-        
-      <Text style={styles.header}>{ params.what }</Text>
+
+        <Text style={styles.header}>{params.what}</Text>
       </View>
-      );
+    );
   }
 }
 
@@ -122,9 +122,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column-reverse',
   },
   scrollView: {
-  
+
   },
-  header:{
+  header: {
     padding: '5%',
     fontSize: 36,
     textTransform: 'uppercase',

@@ -1,9 +1,9 @@
 {
-  "devToolsPort": 19004,
+  "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 18512,
+  "packagerPid": 23108,
   "expoServerNgrokUrl": "https://4z-sbv.belugaboys.pint-sanke-app-1.exp.direct",
   "packagerNgrokUrl": "https://packager.4z-sbv.belugaboys.pint-sanke-app-1.exp.direct",
-  "ngrokPid": 9644
+  "ngrokPid": 19036
 }

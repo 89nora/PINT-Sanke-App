@@ -52,12 +52,13 @@ export default class GeoFenceComponent extends Component {
           null
         }
 
-        {pointsOfInterest.map((p, index) => (
+        {pointsOfInterest.map((p, index, index1, index2, index3) => (
           // Create new temporary array with each of the the points of interest turned into individual
           //Markers in the new array. The new temporary array of Markers is hereafter displayed  as Markers on the map              
-          <Fragment>
+          <Fragment key={index}>
             <Marker
-              key={index}
+            //https://reactjs.org/docs/lists-and-keys.html#keys
+              key={index1}
               coordinate={p.coords}
               title={p.whatis}
             >
@@ -70,7 +71,7 @@ export default class GeoFenceComponent extends Component {
             </Marker>
             {this.props.switchValue == true && p.currentDistance < p.radius + this.props.sliderValue * 1000 ?
               <Circle
-
+                key={index2}
                 center={p.coords}
                 radius={p.radius}
                 strokeWidth={2}
@@ -82,7 +83,7 @@ export default class GeoFenceComponent extends Component {
             }
             {this.props.switchValue == true && p.currentDistance > p.radius + this.props.sliderValue * 1000 ?
               <Circle
-
+                key={index3}
                 center={p.coords}
                 radius={p.radius}
                 strokeWidth={2}
