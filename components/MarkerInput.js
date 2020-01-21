@@ -11,10 +11,13 @@ export default class MarkerInput extends React.Component {
   };
 
   //only stores the data inside text prop
-  handleChangeTextCallBack = (text) => {
+  handleChangeTextCallBack = (text2) => { // forklares her og i weather appen i Fullstack bogen (s. ~ 42-52)
+    //https://towardsdatascience.com/passing-data-between-react-components-parent-children-siblings-a64f89e24ecf
     //both sends back info to parent component and sets state inside MarkerInput
-    this.props.callbackOnChangeText(text);
-    this.setState({ text: text });
+    this.props.callbackOnChangeText(text2);
+    // sætter kun state så der opdateres løbende i textfeltet når man skriver
+    this.setState({ text: text2 });
+    console.log(text2);
   };
 
   handleSubmitEditing = () => {
@@ -24,6 +27,7 @@ export default class MarkerInput extends React.Component {
     if (!text) return;
 
     onSubmit(text);
+    // on submit sættes til at være tom
     this.setState({ text: '' });
   };
 
@@ -41,7 +45,7 @@ export default class MarkerInput extends React.Component {
             style={styles.textInput}
             autoCorrect={false}
             value={text}
-            placeholder={this.props.placeholder} 
+            placeholder={this.props.placeholder}
             placeholderTextColor="white"
             onChangeText={this.handleChangeTextCallBack}
             onSubmitEditing={this.handleSubmitEditing}
@@ -59,7 +63,7 @@ MarkerInput.propTypes = {
   placeholder: PropTypes.string,
 };
 
-MarkerInput.defaultProps = { 
+MarkerInput.defaultProps = {
   placeholder: '',
 };
 

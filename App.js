@@ -9,12 +9,12 @@ import InterestScreen from './screens/InterestScreen.js';
 
 
 const MapStack = createStackNavigator({
-  Map: {screen: MapScreen},
-  InterestPoint: {screen: InterestScreen},
+  Map: { screen: MapScreen },
+  InterestPoint: { screen: InterestScreen },
 },
-{
-  headerMode: 'none',
-}
+  {
+    headerMode: 'none',
+  }
 
 );
 
@@ -22,44 +22,45 @@ const AppContainer = createAppContainer(createBottomTabNavigator(
   {
     Map: {
       screen: MapStack,
-      
+
       navigationOptions: {
-       
+
         title: 'Map',
 
-        tabBarIcon: ({tintColor  }) => (
+        tabBarIcon: ({ tintColor }) => (
 
           <View style={styles.tab}>
-          <Image source={require("./assets/Group1.png")} size={36} />
-          <Text style={[styles.name, { color: tintColor }]}>Map</Text>
-        </View>
+            <Image source={require("./assets/Group1.png")} size={36} />
+            <Text style={[styles.name, { color: tintColor }]}>Map</Text>
+          </View>
         ),
 
       },
 
-      
+
     },
 
     Camera: {
       screen: CameraScreen,
-      
+
       navigationOptions: {
-       
+
         title: 'Camera',
 
         tabBarIcon: ({ tintColor }) => (
 
           <View style={styles.tab}>
-          <Image source={require("./assets/Group2.png")} size={36} />
-          <Text style={[styles.name, { color: tintColor }]}>Camera</Text>
-        </View>
+            <Image source={require("./assets/Group2.png")} size={36} />
+            <Text style={[styles.name, { color: tintColor }]}>Camera</Text>
+          </View>
         ),
 
-      },   
-    }, 
+      },
+    },
   },
 
   {
+    // sætter Map screen til at være den man starter med at få vist
     initialRouteName: "Map",
     tabBarOptions: {
       activeTintColor: "#fff",
@@ -77,17 +78,18 @@ const AppContainer = createAppContainer(createBottomTabNavigator(
   }
 ));
 
-export default class App extends React.Component{ 
- 
-constructor(props){
-  super(props);
-}
+export default class App extends React.Component {
 
-render() {
-  return(
-    <AppContainer />
-  );
-}
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    // Sørger for at AppContainer med alt indholdet bliver vist
+    return (
+      <AppContainer />
+    );
+  }
 
 }
 

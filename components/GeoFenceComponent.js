@@ -1,25 +1,23 @@
-import React, { Component } from 'react';
-import { Text, StyleSheet, Dimensions, Image,  } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { initalizePointsOfInterest, pointsOfInterest} from '../utils/PointsOfInterest.js';
+import React, { Component, Fragment } from 'react';
+import { Text, StyleSheet, Dimensions, Image, } from 'react-native';
+import MapView, { Marker, Circle } from 'react-native-maps';
+import { initalizePointsOfInterest, pointsOfInterest } from '../utils/PointsOfInterest.js';
+const radius = 1000;
 export default class GeoFenceComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-    initialRegion: null, 
+      initialRegion: null,
     };
   };
- 
- componentDidMount()   
-  {
+
+  componentDidMount() {
     //tjekker kun radius på den forreste i den sorterede liste
-    if ( pointsOfInterest[0].currentDistance<pointsOfInterest[0].radius)
-    {
-      this.props.inZone(true,pointsOfInterest[0]);
-    } 
+    if (pointsOfInterest[0].currentDistance < pointsOfInterest[0].radius) {
+      this.props.inZone(true, pointsOfInterest[0]);
+    }
   }
-  componentWillUnmount() 
-  {
+  componentWillUnmount() {
     this.watchId.remove(); // stop watching for location changes
   }
   markerInputFn = (onPressInfo) => {
@@ -32,30 +30,72 @@ export default class GeoFenceComponent extends Component {
     return (
       // initialRegion sørger for at mapped ikke hele tiden zoomer tilbage til start positionen når det opdateres
       <MapView style={styles.mapStyle} initialRegion={this.props.mapRegion} onLongPress={(e) => {
-         this.markerInputFn(true),
-         this.markerCoordsFn(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
-         }}>
-           
+        this.markerInputFn(true),
+          this.markerCoordsFn(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
+      }}>
+
         <Marker coordinate={this.props.userMarker}>
           <Image source={require('../assets/userMarker.png')} style={{ width: 50, height: 50 }} />
+
         </Marker>
-  
-        {pointsOfInterest.map((p, index) => ( 
-            // Create new temporary array with each of the the points of interest turned into individual
-            //Markers in the new array. The new temporary array of Markers is hereafter displayed  as Markers on the map              
-          <Marker
-            key={index}
-            coordinate={p.coords}
-            title={p.whatis}
+        {this.props.switchValue ?
+
+          <Circle
+            center={this.props.userMarker}
+            radius={this.props.sliderValue * 1000}
+            strokeWidth={2}
+            strokeColor='blue'
+            fillColor='rgba(100,100,200,0.5)'
+          />
+
+          :
+          null
+        }
+
+        {pointsOfInterest.map((p, index, index1, index2, index3) => (
+          // Create new temporary array with each of the the points of interest turned into individual
+          //Markers in the new array. The new temporary array of Markers is hereafter displayed  as Markers on the map              
+          <Fragment key={index}>
+            <Marker
+            //https://reactjs.org/docs/lists-and-keys.html#keys
+              key={index1}
+              coordinate={p.coords}
+              title={p.whatis}
             >
-            <Image source={(this.props.switchValue == true && p.currentDistance < p.radius) ?
-              (require('../assets/greenApple.png'))
-            :
-              (require('../assets/apple1.png'))}
-            />
-          </Marker>
-        ))} 
-      </MapView> 
+
+              <Image source={(this.props.switchValue == true && p.currentDistance < p.radius + this.props.sliderValue * 1000) ?
+                (require('../assets/greenApple.png'))
+                :
+                (require('../assets/apple1.png'))}
+              />
+            </Marker>
+            {this.props.switchValue == true && p.currentDistance < p.radius + this.props.sliderValue * 1000 ?
+              <Circle
+                key={index2}
+                center={p.coords}
+                radius={p.radius}
+                strokeWidth={2}
+                strokeColor='green'
+                fillColor='rgba(100,200,100,0.5)'
+              />
+              :
+              null
+            }
+            {this.props.switchValue == true && p.currentDistance > p.radius + this.props.sliderValue * 1000 ?
+              <Circle
+                key={index3}
+                center={p.coords}
+                radius={p.radius}
+                strokeWidth={2}
+                strokeColor='red'
+                fillColor='rgba(200,100,100,0.5)'
+              />
+              :
+              null
+            }
+          </Fragment>
+        ))}
+      </MapView>
     );
   }
 }

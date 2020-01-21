@@ -43,9 +43,9 @@ export default class CameraScreen extends Component {
 
   onPictureSaved = async photo => {
     this.setState({
- 
-     //pictureUri: photo,
-     // image: photo,
+
+      //pictureUri: photo,
+      // image: photo,
     });
     {
       console.log("PhotoURI: " + photo);
@@ -67,7 +67,7 @@ export default class CameraScreen extends Component {
               }}
               style={styles.camera}
               type={Camera.Constants.Type.back}
-            ratio={this.state.ratio}
+              ratio={this.state.ratio}
             >
             </Camera>
           </View>
